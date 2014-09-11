@@ -2,7 +2,7 @@
 
 **Authors:** Ben Taylor
 
-**Overview:** NexusDrop is a drag-and-drop web interface creator.
+**Overview:** NexusDrop is a drag-and-drop environment for building and sharing web audio instruments
 
 **Project Site:** http://nexusosc.com
 
