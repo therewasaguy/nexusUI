@@ -196,41 +196,43 @@ function typewriter(target, transmitCommand) {
 	}
 
 	this.type = function(e) {
-		var currKey = e.which;
-		for (var i=0;i<self.rows.length;i++) {
-			for (var j=0;j<self.rows[i].length;j++) {
-				if (currKey == self.rows[i][j].value) {
-					console.log(self.rows[i][j].symbol)
-				//	self.rows[i][j].on = true;
-					self.val.key = self.rows[i][j].symbol;
-					self.val.on = 1;
-					self.val.ascii = e.which;
-					self.nxTransmit(self.val);
-					break;
+		if (!nx.editmode) {
+			var currKey = e.which;
+			for (var i=0;i<self.rows.length;i++) {
+				for (var j=0;j<self.rows[i].length;j++) {
+					if (currKey == self.rows[i][j].value) {
+						console.log(self.rows[i][j].symbol)
+						self.val.key = self.rows[i][j].symbol;
+						self.val.on = 1;
+						self.val.ascii = e.which;
+						self.nxTransmit(self.val);
+						break;
+					}
 				}
 			}
-		}
-		//self.nxTransmit();
-		self.draw();	
+			self.draw();
+		}	
 	}
 	
 	this.untype = function(e) {
-	
-		var currKey = e.which;
-		for (var i=0;i<self.rows.length;i++) {
-			for (var j=0;j<self.rows[i].length;j++) {
-				if (currKey == self.rows[i][j].value) {
-				//	self.rows[i][j].on = false;
-					self.val.key = self.rows[i][j].symbol;
-					self.val.on = 0;
-					self.val.ascii = e.which;
-					self.nxTransmit(self.val);
-					break;
+		if (!nx.editmode) {
+		
+			var currKey = e.which;
+
+			for (var i=0;i<self.rows.length;i++) {
+				for (var j=0;j<self.rows[i].length;j++) {
+					if (currKey == self.rows[i][j].value) {
+					//	self.rows[i][j].on = false;
+						self.val.key = self.rows[i][j].symbol;
+						self.val.on = 0;
+						self.val.ascii = e.which;
+						self.nxTransmit(self.val);
+						break;
+					}
 				}
 			}
+			self.draw();
 		}
-		//self.nxTransmit();
-		self.draw();
 	}
 	
 }

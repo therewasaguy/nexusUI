@@ -92,18 +92,13 @@
 					}
 					nx.onload();
 					document.addEventListener("mousemove", dragobj, true);
-			//		document.addEventListener("touchmove", touchdragobj, true);
 					$("#"+thisname).mousemove(function(e) {
 						if (nx.editmode && e.pageX>(parseInt(($(this).width()-10))+parseInt($(this).css("left").replace("px",""))) && e.pageY>(parseInt(($(this).height()-10))+parseInt($(this).css("top").replace("px","")))) {
-						//	document.body.style.cursor = "se-resize";
 							this.style.cursor = "se-resize"
 						} else {
-						//	document.body.style.cursor = "pointer";
 							this.style.cursor = "pointer"
 						}
 					}) 
-
-				  //	$("canvas").css("border", "solid 1px "+nx.colors.accent);
 				  	nx.highlightEditedObj();
 				  	nx.audioStrings[thisname] = ""
 				  	nx.audioFunctions[thisname] = new Function();
@@ -112,9 +107,7 @@
 
 			$(document).ready(function() {
 
-	 			Gibber.init() // REQUIRED!
-
-
+	 			Gibber.init();
 
 				Gibber.clear = function(callback) {
 					this.out ?	this.out.inputs.length=0 : null;
@@ -134,12 +127,13 @@
 					if (callback) { callback() };
 				}
 
+				// for possibly capturing cmd+c later...
 			/*	$(document).keydown(function (e) {
 				    if (e.metaKey == true) {
 				        alert('meta key yo!');
 				    }
 				});
-*/
+			*/
 
 				
 
@@ -185,7 +179,6 @@
 					nx.editOff();
 				});
 
-			//	$("#roamingcode").draggable();
 			})
 /*
 			function startHighlighting(e) {
@@ -205,17 +198,18 @@
 			} 
 */
 			function dragobj(e) {
-			//	var matrixy = ~~(e.pageY/50)*50;
-			//	var matrixx = ~~(e.pageX/50)*50;
 				var x1 = $("#"+globaldragid).css("width");
 				x1 = x1.replace("px","");
 				x1 /= 2;
-				var y1 = $("#"+globaldragid).css("width");
+				var y1 = $("#"+globaldragid).css("height");
 				y1 = y1.replace("px","");
 				y1 /= 2;
 
 				var matrixy = e.pageY - y1;
 				var matrixx = e.pageX - x1;
+
+				matrixx = ~~(matrixx/3)*3;
+				matrixy = ~~(matrixy/3)*3;
 
 				$("#"+globaldragid).css("top",matrixy).css("left",matrixx);
 			}
@@ -226,8 +220,6 @@
 
 			function deleteObject() {
 				window[globaldragid].destroy();
-			//	$("#"+globaldragid).remove();
-			//	nx.elemTypeArr.splice(nx.elemTypeArr.indexOf());
 			}
 
 			function setoscname(val) {
@@ -547,12 +539,6 @@
 
 			function setUIDB(data) {
 				UIDB = data;
-		/*		var options = ""
-			    for(var i = 0; i < UIDB.length; i++) {
-			    	options += '<a class="dbopt" href="javascript:searchDB(\''+UIDB[i].name+'\')">'+UIDB[i].name+'</a> ';
-			    }
-
-			    document.getElementById('searchresults').innerHTML = options; */
 			}
 
 			function sortDB(name) {
@@ -717,7 +703,6 @@
 		</script>
 	</head>
 	<body>
-
 		<style>
 
 			.butt {
@@ -938,42 +923,20 @@
 
 			</style>
 
-			<div id="elemlist" style="background-color:white;padding-left:1px">
+			<div id="elemlist" style="background-color:white;padding-left:1px;">
 
-				<img class="nxoptimg" title="banner" draggable="false" src="images/banner.png">
-				<img class="nxoptimg" src="images/button.png" title="button" draggable="false" >
-				<img class="nxoptimg" src="images/colors.png" title="colors" draggable="false" >
-				<img class="nxoptimg" src="images/dial.png" title="dial" draggable="false" >
-				<img class="nxoptimg" src="images/multitouch.png" title="multitouch" draggable="false" >
-				<img class="nxoptimg" src="images/envelope.png" title="envelope" draggable="false" >
-				<img class="nxoptimg" src="images/joints.png" title="joints" draggable="false" >
-				<img class="nxoptimg" src="images/keyboard.png" title="keyboard" draggable="false" >
-				<img class="nxoptimg" src="images/matrix.png" title="matrix" draggable="false" >
-				<img class="nxoptimg" src="images/mouse.png" title="mouse" draggable="false" >
-				<img class="nxoptimg" src="images/multislider.png" title="multislider" draggable="false" >
-				<img class="nxoptimg" src="images/number.png" title="number" draggable="false" >
-				<img class="nxoptimg" src="images/pixels.png" title="pixels" draggable="false" >
-				<img class="nxoptimg" src="images/position.png" title="position" draggable="false" >
-				<img class="nxoptimg" src="images/range.png" title="range" draggable="false" >
-				<img class="nxoptimg" src="images/slider.png" title="slider" draggable="false" >
+				<script>
 
+				var elembuttons = [ "button", "dial", "toggle", "slider", "position", "range", "number", "keyboard", "tilt", "multislider", "multitouch", "envelope", "matrix", "mouse", "typewriter", "strings", "colors", "pixels", "wheel", "vinyl", "joints", "banner" ]
+				                     
 
-			<!--	<div class="nxopt">banner</div>
-				<div class="nxopt">button</div>
-				<div class="nxopt">dial</div>
-				<div class="nxopt">keyboard</div>
-				<div class="nxopt">metroball</div>
-				<div class="nxopt">mouse</div>
-				<div class="nxopt">multislider</div>
-				<div class="nxopt">multitouch</div>
-				<div class="nxopt">number</div>
-				<div class="nxopt">pixels</div>
-				<div class="nxopt">position</div>
-				<div class="nxopt">slider</div>
-				<div class="nxopt">string</div>
-				<div class="nxopt">tilt</div>
-				<div class="nxopt">toggle</div>
-				<div class="nxopt">typewriter</div> -->
+				for (var i=0;i<elembuttons.length;i++) {
+					var htmlstr = '<img class="nxoptimg" title="'+elembuttons[i]+'" draggable="false" src="images/'+elembuttons[i]+'.png">'
+					document.write(htmlstr);
+				}
+				document.write('<div style="clear:both"></div>');
+
+				</script>
 
 				<br>
 				<br>
