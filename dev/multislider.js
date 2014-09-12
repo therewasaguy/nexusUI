@@ -10,7 +10,7 @@ function multislider(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 200 };
+	this.defaultSize = { width: 150, height: 75 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -125,7 +125,6 @@ function multislider(target, transmitCommand) {
 		msg["list"] = new String();
 		for (var key in self.val) { msg["list"] += self.val[key] + " " }
 		self.nxTransmit(msg);
-		console.log(msg);
 		
 	}
 	

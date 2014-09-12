@@ -13,7 +13,7 @@ function tilt(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 100, height: 100 };
+	this.defaultSize = { width: 50, height: 50 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -59,20 +59,21 @@ function tilt(target, transmitCommand) {
 		
 	}
 
-	this.init = function() {
+	this.customDestroy = function() {
+		window.removeEventListener('deviceorientation', self.webkitMotion, false)
+		window.removeEventListener('MozOrientation', self.mozMotion, false)
+	}
+
+	self.webkitMotion = function(eventData) {
+		self.tiltLR = eventData.gamma;
+		self.tiltFB = eventData.beta;
+		self.z = eventData.alpha;
+		self.deviceOrientationHandler();
 		self.draw();
-		
-		if (window.DeviceOrientationEvent) {
-		  window.addEventListener('deviceorientation', function(eventData) {
-		    self.tiltLR = eventData.gamma;
-			self.tiltFB = eventData.beta;
-			self.z = eventData.alpha
-		    self.deviceOrientationHandler();
-		    self.draw();
-		  }, false);
-		} else if (window.OrientationEvent) {
-		  window.addEventListener('MozOrientation', function(eventData) {
-		    self.tiltLR = eventData.x * 90;
+	}
+
+	self.mozMotion = function(eventData) {
+		 	self.tiltLR = eventData.x * 90;
 		    // y is the front-to-back tilt from -1 to +1, so we need to convert to degrees
 		    // We also need to invert the value so tilting the device towards us (forward) 
 		    // results in a positive value. 
@@ -80,7 +81,16 @@ function tilt(target, transmitCommand) {
 		    self.z = eventData.z;
 		    self.deviceOrientationHandler();
 		    self.draw();
-		  }, false);
+	}
+
+
+	this.init = function() {
+		self.draw();
+		
+		if (window.DeviceOrientationEvent) {
+		  window.addEventListener('deviceorientation', self.webkitMotion, false);
+		} else if (window.OrientationEvent) {
+		  window.addEventListener('MozOrientation', self.mozMotion, false);
 		} else {
 		  console.log("Not supported on your device or browser.")
 		}

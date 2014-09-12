@@ -34,8 +34,8 @@ var nx = function() {
 	this.isResizing = false;
 	this.showLabels = false;
 	this.oscIp = "127.0.0.1";
-	canvasgridy = 10;
-	canvasgridx = 10;
+	canvasgridy = 5;
+	canvasgridx = 5;
 	this.starttime = new Date().getTime();
 	this.WAenv = false;
 	
@@ -618,7 +618,12 @@ var nx = function() {
 	
 	this.pulse = function() {
 		for (var i=0;i<manager.aniItems.length;i++) {
-			manager.aniItems[i]();
+			try {
+				manager.aniItems[i]()
+			} catch (err) {
+				manager.aniItems.splice(i,1);
+				console.log("animation removed");
+			}
 		}
 	}
 	
@@ -929,7 +934,8 @@ function getTemplate(self, target, transmitCommand) {
 		self.deltaMove.x = 0;
 		self.deltaMove.y = 0;
 		if (nx.editmode) {
-			if (self.clickPos.x>self.width-20 && self.clickPos.y>self.height-20) {
+			console.log(self.constructor)
+			if (self.clickPos.x>self.width-20 && self.clickPos.y>self.height-20 && self.getName()!="mouse") {
 				self.isBeingResized = true;
 				if (nx.WAenv) {
 					hideElementCallbackCode();
@@ -994,12 +1000,12 @@ function getTemplate(self, target, transmitCommand) {
 				if (nx.WAenv) {
 					hideElementCallbackCode();
 				}
-			//	var matrixy = ~~((e.pageY-self.height/2)/canvasgridy)*canvasgridy;
-			//	var matrixx = ~~((e.pageX-self.width/2)/canvasgridx)*canvasgridx;
-			//	self.canvas.style.top = matrixy+"px";
-			//	self.canvas.style.left = matrixx+"px";
-				self.canvas.style.top = ~~(e.pageY-self.height/2)+"px";
-				self.canvas.style.left = ~~(e.pageX-self.width/2)+"px";
+				var matrixy = ~~((e.pageY-self.height/2)/canvasgridy)*canvasgridy;
+				var matrixx = ~~((e.pageX-self.width/2)/canvasgridx)*canvasgridx;
+				self.canvas.style.top = matrixy+"px";
+				self.canvas.style.left = matrixx+"px";
+			//	self.canvas.style.top = ~~(e.pageY-self.height/2)+"px";
+			//	self.canvas.style.left = ~~(e.pageX-self.width/2)+"px";
 				self.offset = new nx.canvasOffset(nx.findPosition(self.canvas).left,nx.findPosition(self.canvas).top);	
 			} 
 		} else {
@@ -1209,7 +1215,7 @@ function getTemplate(self, target, transmitCommand) {
 		}
 	}
 
-	self.customDestroy = function() { console.log("dummy") }
+	self.customDestroy = function() {  }
 
 	self.destroy = function() {
 

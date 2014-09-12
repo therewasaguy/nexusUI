@@ -92,7 +92,7 @@ function button(target, transmitCommand) {
 
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 100, height: 100 };
+	this.defaultSize = { width: 50, height: 50 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -278,7 +278,7 @@ function colors(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 200, height: 200 };
+	this.defaultSize = { width: 100, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -476,7 +476,7 @@ function dial(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 100, height: 100 };
+	this.defaultSize = { width: 50, height: 50 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -651,7 +651,7 @@ function envelope(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 100, height: 100 };
+	this.defaultSize = { width: 75, height: 75 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -826,13 +826,13 @@ function ghost(target) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 200 };
+	this.defaultSize = { width: 200, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target);
 	
 	//define unique attributes
-	this.bufferLength = 1000;
+	this.bufferLength = 300;
 	this.components = new Array();
 	this.buffer = new Array();
 	this.moment = 0;
@@ -1014,7 +1014,7 @@ function joints(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 300 };
+	this.defaultSize = { width: 150, height: 150 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -1532,7 +1532,7 @@ function matrix(target, transmitCommand) {
 
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 200, height: 200 };
+	this.defaultSize = { width: 100, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -1546,7 +1546,7 @@ function matrix(target, transmitCommand) {
 		matrix1.draw()
 	```
 	*/
-	this.row = 3;
+	this.row = 4;
 
 	/** @property {integer}  col   Number of columns in the matrix
 	```js
@@ -1554,7 +1554,7 @@ function matrix(target, transmitCommand) {
 		matrix1.draw()
 	```
 	*/
-	this.col = 3;
+	this.col = 4;
 	
 	this.off = 3;
 	this.cellHgt;
@@ -2242,7 +2242,7 @@ function mouse(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 98, height: 100 };
+	this.defaultSize = { width: 75, height: 75 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -2265,9 +2265,8 @@ function mouse(target, transmitCommand) {
 
 
 	this.init = function() {
-		console.log("mouse init");
-		self.mousing = window.addEventListener("mousemove",  self.preMove, false);
-		self.mousing = window.addEventListener("touchmove",  self.preTouchMove, false);
+		window.addEventListener("mousemove",  self.preMove, false);
+		window.addEventListener("touchmove",  self.preTouchMove, false);
 
 		self.inside.height = self.height-self.lineWidth;
 		self.inside.width = self.width-self.lineWidth;
@@ -2349,7 +2348,7 @@ function multislider(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 200 };
+	this.defaultSize = { width: 150, height: 75 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -2464,7 +2463,6 @@ function multislider(target, transmitCommand) {
 		msg["list"] = new String();
 		for (var key in self.val) { msg["list"] += self.val[key] + " " }
 		self.nxTransmit(msg);
-		console.log(msg);
 		
 	}
 	
@@ -2493,7 +2491,7 @@ function multitouch(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 300 };
+	this.defaultSize = { width: 200, height: 200 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -2702,7 +2700,7 @@ function number(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 100, height: 50 };
+	this.defaultSize = { width: 50, height: 25 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -2770,33 +2768,6 @@ function number(target, transmitCommand) {
 		}
 	}
 }
-// panel for max duplication -- maybe this object is unnecessary.
-
-function panel(target, transmitCommand) {
-					
-	//self awareness
-	var self = this;
-	this.defaultSize = { width: 100, height: 100 };
-	
-	//get common attributes and methods
-	getTemplate(self, target, transmitCommand);
-	
-	this.init = function() {
-		self.draw();
-	}
-
-	this.draw = function() {
-		self.erase();
-		self.makeRoundedBG();
-		with (self.context) {
-			strokeStyle = self.colors.border;
-			fillStyle = self.colors.fill;
-			lineWidth = self.lineWidth;
-			stroke();
-			fill();
-		}
-	}
-}
 /** 
 	@class pixels      
 	Drawable pixelated canvas. Can be drawn on with different colors (use with nexus 'colors' object). See 'read' and 'write' modes. Sequencer functionality forthcoming.
@@ -2811,7 +2782,7 @@ function pixels(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 300 };
+	this.defaultSize = { width: 100, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -2822,7 +2793,7 @@ function pixels(target, transmitCommand) {
 		pixels1.dim = { x: 5, y: 4 }
 	```
 		*/
-	self.dim = { x: 10, y: 10};
+	self.dim = { x: 5, y: 5};
 
 	//define unique attributes
 	/** @property {string}  mode   Define the object's mode: "read" or "write" (default is "write")
@@ -3025,7 +2996,7 @@ function position(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 200 };
+	this.defaultSize = { width: 150, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -3191,7 +3162,7 @@ function range(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 50, height: 200 };
+	this.defaultSize = { width: 25, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -3373,227 +3344,6 @@ function range(target, transmitCommand) {
 
 }
 /** 
-	@class sandbox      
-	Add and move around an unlimited number of 2D points.
-	```html
-	<canvas nx="sandbox"></canvas>
-	```
-	<canvas nx="sandbox" style="margin-left:25px"></canvas>
-*/
-
-			
-function sandbox(target, transmitCommand) {
-					
-	//self awareness
-	var self = this;
-	this.defaultSize = { width: 300, height: 300 };
-	
-	//get common attributes and methods
-	getTemplate(self, target, transmitCommand);
-	
-	//define unique attributes
-	var toySize = 60;
-	var trashWall = toySize+20;
-	var dragging = -1;
-	var Toys = new Array();
-	var ToyColors = ["red", "orange", "yellow", "green", "blue", "purple", "black", "pink"];
-	var ToyOptions = new Array();
-	var i;
-	self.options = 4;
-	
-	for (i=0;i<self.options;i++) {
-			var xpos = 10+toySize/2;
-			var ypos = i*(toySize+12)+11 + toySize/2;	
-			ToyOptions[i] = {
-				color: ToyColors[i%8],
-				xpos: xpos,
-				ypos: ypos,
-				wid: toySize,
-				hgt: toySize
-			}
-			
-	}
-	
-	this.isInsideCircle = function(clickedNode,currObject) {
-		
-		if (clickedNode.x > currObject.xpos-currObject.wid/2 && clickedNode.x < (currObject.xpos+currObject.wid/2) && clickedNode.y > currObject.ypos-currObject.hgt/2 && clickedNode.y < (currObject.ypos+currObject.hgt/2)) {
-			return true;	
-		} else {
-			return false;	
-		}
-	}
-	
-	this.init = function() {
-		
-		self.createUISpaces();
-		self.drawSpaces();
-		self.drawToyOptions();
-		self.drawToys();
-			
-	}
-	
-	this.draw = function() {
-		self.drawSpaces();
-		self.drawToyOptions();
-		self.drawToys();
-		self.drawLabel();
-	}
-	
-	this.createUISpaces = function() {
-			
-		self.UISpaces = [
-							{
-								field: "main",
-								xpos: 65,
-								ypos: 5,
-								wid: self.canvas.width-95,
-								hgt: self.canvas.height-10,
-								hint: "sandbox"
-							},
-							{
-								field: "holder",
-								xpos: 5,
-								ypos: 5,
-								wid: 70,
-								hgt: self.canvas.height-10,
-								hint: ""
-							}
-						]; 
-						
-		for (i=0;i<this.UISpaces.length;i++) {
-			this.UISpaces[i].xpos2 = this.UISpaces[i].xpos + this.UISpaces[i].wid;
-			this.UISpaces[i].ypos2 = this.UISpaces[i].ypos + this.UISpaces[i].hgt;
-			
-			this.UISpaces[i].centerx = this.UISpaces[i].xpos + (this.UISpaces[i].wid/2);
-			this.UISpaces[i].centery = this.UISpaces[i].ypos + (this.UISpaces[i].hgt/2);
-		}	
-		
-	}
-	
-	self.click = function(e) {
-		for (i=0;i<ToyOptions.length;i++) {
-			if (self.isInsideCircle(self.clickPos, ToyOptions[i])) {
-				var newToy = {
-								xpos: ToyOptions[i].xpos,
-								ypos: ToyOptions[i].xpos,
-								wid: ToyOptions[i].wid,
-								hgt: ToyOptions[i].hgt,
-								color: ToyOptions[i].color,
-								shape: ToyOptions[i].shape,
-				}; 
-				Toys.push(newToy);
-				dragging = Toys.length-1;
-			}	
-		}
-		for (i=0;i<Toys.length;i++) { 
-			if (self.isInsideCircle(self.clickPos, Toys[i])) {
-				dragging = i;
-			}	
-		}
-		self.nxTransmit([dragging, Toys[dragging].xpos, Toys[dragging].ypos]);
-	}
-	
-	self.move = function(e) {
-		if (self.clicked) {
-			if (dragging!=-1) {
-				Toys[dragging].xpos = self.clickPos.x;
-				Toys[dragging].ypos = self.clickPos.y;
-				self.drawToys();	
-				self.nxTransmit([dragging, Toys[dragging].xpos, Toys[dragging].ypos]);
-			}
-		}
-	}
-	
-	self.release = function(e) {
-		dragging = -1;
-		for (i=Toys.length-1;i>-1;i--) { 
-			if (Toys[i].xpos<trashWall) {
-				Toys.splice(i,1);
-			}	
-		}
-		self.drawToys();
-	}	
-	
-	self.touch = function(e) {
-		self.click(e);
-	}
-	
-	self.touchMove = function(e) {
-		self.move(e);
-	}
-	
-	self.touchRelease = function(e) {
-		self.release(e);
-	}
-	
-	self.drawToyOptions = function () {
-			
-		with (self.context) {
-			for (i=0;i<ToyOptions.length;i++) {
-				globalAlpha = 0.4;
-				fillStyle = ToyOptions[i].color;
-				beginPath();
-				arc(ToyOptions[i].xpos, ToyOptions[i].ypos, toySize/2, Math.PI*2, false);
-				fill();
-				closePath();
-				//fillRect(ToyOptions[i].xpos, ToyOptions[i].ypos, toySize, toySize);
-				fillStyle = self.colors.accent;
-				
-				beginPath();
-				arc(ToyOptions[i].xpos, ToyOptions[i].ypos, toySize/2, Math.PI*2, false);
-				fill();
-				//fillRect(ToyOptions[i].xpos, ToyOptions[i].ypos, toySize, toySize);
-				globalAlpha = 1;
-			}
-		}
-			
-	}
-	
-	self.drawToys = function() {
-		with (self.context) {
-			clearRect(0,0,self.width,self.height);
-			self.drawSpaces();
-			self.drawToyOptions();
-			for (i=0;i<Toys.length;i++) {
-				globalAlpha = 0.4;
-				fillStyle = Toys[i].color;
-				beginPath();
-				arc(Toys[i].xpos, Toys[i].ypos, toySize/2, Math.PI*2, false);
-				fill();
-				//fillRect(Toys[i].xpos, Toys[i].ypos, toySize, toySize);
-				fillStyle = self.colors.accent;
-				beginPath();
-				arc(Toys[i].xpos, Toys[i].ypos, toySize/2, Math.PI*2, false);
-				fill();
-				//fillRect(Toys[i].xpos, Toys[i].ypos, toySize, toySize);
-			}
-			globalAlpha = 1;
-		}	
-	}
-	
-	self.drawSpaces = function() {
-	
-		with (self.context) {
-			
-			lineWidth = self.lineWidth;
-			strokeStyle = self.colors.border;
-			fillStyle = self.colors.fill;
-			for (i=0;i<self.UISpaces.length;i++) {
-				var space = self.UISpaces[i];
-				nx.makeRoundRect(self.context,space.xpos,space.ypos,space.wid,space.hgt);
-				stroke();
-				fill();
-			}
-		
-		}
-	}
-	
-}	
-
-
-
-
-/** 
 	@class select    
 	HTML-style option selector. Outputs the chosen text string.
 	```html
@@ -3606,7 +3356,7 @@ function select(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 200, height: 30 };
+	this.defaultSize = { width: 100, height: 30 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -3667,7 +3417,7 @@ function slider(target) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 50, height: 200 };
+	this.defaultSize = { width: 25, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target);
@@ -3843,7 +3593,7 @@ function string(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 200 };
+	this.defaultSize = { width: 100, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -3853,7 +3603,7 @@ function string(target, transmitCommand) {
 		velocity: 0
 	}
 
-	this.numberofstrings = 8;
+	this.numberofstrings = 5;
 	this.strings = new Array();
 	this.abovestring = new Array();
 	this.friction = 2;
@@ -4028,7 +3778,7 @@ function toggle(target, transmitCommand) {
 
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 100, height: 100 };
+	this.defaultSize = { width: 50, height: 50 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -4150,7 +3900,7 @@ function tilt(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 100, height: 100 };
+	this.defaultSize = { width: 50, height: 50 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -4196,20 +3946,21 @@ function tilt(target, transmitCommand) {
 		
 	}
 
-	this.init = function() {
+	this.customDestroy = function() {
+		window.removeEventListener('deviceorientation', self.webkitMotion, false)
+		window.removeEventListener('MozOrientation', self.mozMotion, false)
+	}
+
+	self.webkitMotion = function(eventData) {
+		self.tiltLR = eventData.gamma;
+		self.tiltFB = eventData.beta;
+		self.z = eventData.alpha;
+		self.deviceOrientationHandler();
 		self.draw();
-		
-		if (window.DeviceOrientationEvent) {
-		  window.addEventListener('deviceorientation', function(eventData) {
-		    self.tiltLR = eventData.gamma;
-			self.tiltFB = eventData.beta;
-			self.z = eventData.alpha
-		    self.deviceOrientationHandler();
-		    self.draw();
-		  }, false);
-		} else if (window.OrientationEvent) {
-		  window.addEventListener('MozOrientation', function(eventData) {
-		    self.tiltLR = eventData.x * 90;
+	}
+
+	self.mozMotion = function(eventData) {
+		 	self.tiltLR = eventData.x * 90;
 		    // y is the front-to-back tilt from -1 to +1, so we need to convert to degrees
 		    // We also need to invert the value so tilting the device towards us (forward) 
 		    // results in a positive value. 
@@ -4217,7 +3968,16 @@ function tilt(target, transmitCommand) {
 		    self.z = eventData.z;
 		    self.deviceOrientationHandler();
 		    self.draw();
-		  }, false);
+	}
+
+
+	this.init = function() {
+		self.draw();
+		
+		if (window.DeviceOrientationEvent) {
+		  window.addEventListener('deviceorientation', self.webkitMotion, false);
+		} else if (window.OrientationEvent) {
+		  window.addEventListener('MozOrientation', self.mozMotion, false);
 		} else {
 		  console.log("Not supported on your device or browser.")
 		}
@@ -4530,7 +4290,7 @@ function vinyl(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 150, height: 150 };
+	this.defaultSize = { width: 100, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -4687,7 +4447,7 @@ function wheel(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 150, height: 150 };
+	this.defaultSize = { width: 100, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -4823,7 +4583,6 @@ function wheel(target, transmitCommand) {
 				self.nxTransmit(self.val)
 		} else {
 			for (var i=0;i<self.spokes;i++) {
-				console.log(self.rotation)
 				if (self.rotation - (i/self.spokes)*Math.PI*2 > 0 && self.lastRotation - (i/self.spokes)*Math.PI*2 < 0) {
 					self.val = i
 					self.nxTransmit(self.val)
@@ -4918,8 +4677,8 @@ var nx = function() {
 	this.isResizing = false;
 	this.showLabels = false;
 	this.oscIp = "127.0.0.1";
-	canvasgridy = 10;
-	canvasgridx = 10;
+	canvasgridy = 5;
+	canvasgridx = 5;
 	this.starttime = new Date().getTime();
 	this.WAenv = false;
 	
@@ -5502,7 +5261,12 @@ var nx = function() {
 	
 	this.pulse = function() {
 		for (var i=0;i<manager.aniItems.length;i++) {
-			manager.aniItems[i]();
+			try {
+				manager.aniItems[i]()
+			} catch (err) {
+				manager.aniItems.splice(i,1);
+				console.log("animation removed");
+			}
 		}
 	}
 	
@@ -5813,7 +5577,8 @@ function getTemplate(self, target, transmitCommand) {
 		self.deltaMove.x = 0;
 		self.deltaMove.y = 0;
 		if (nx.editmode) {
-			if (self.clickPos.x>self.width-20 && self.clickPos.y>self.height-20) {
+			console.log(self.constructor)
+			if (self.clickPos.x>self.width-20 && self.clickPos.y>self.height-20 && self.getName()!="mouse") {
 				self.isBeingResized = true;
 				if (nx.WAenv) {
 					hideElementCallbackCode();
@@ -5878,12 +5643,12 @@ function getTemplate(self, target, transmitCommand) {
 				if (nx.WAenv) {
 					hideElementCallbackCode();
 				}
-			//	var matrixy = ~~((e.pageY-self.height/2)/canvasgridy)*canvasgridy;
-			//	var matrixx = ~~((e.pageX-self.width/2)/canvasgridx)*canvasgridx;
-			//	self.canvas.style.top = matrixy+"px";
-			//	self.canvas.style.left = matrixx+"px";
-				self.canvas.style.top = ~~(e.pageY-self.height/2)+"px";
-				self.canvas.style.left = ~~(e.pageX-self.width/2)+"px";
+				var matrixy = ~~((e.pageY-self.height/2)/canvasgridy)*canvasgridy;
+				var matrixx = ~~((e.pageX-self.width/2)/canvasgridx)*canvasgridx;
+				self.canvas.style.top = matrixy+"px";
+				self.canvas.style.left = matrixx+"px";
+			//	self.canvas.style.top = ~~(e.pageY-self.height/2)+"px";
+			//	self.canvas.style.left = ~~(e.pageX-self.width/2)+"px";
 				self.offset = new nx.canvasOffset(nx.findPosition(self.canvas).left,nx.findPosition(self.canvas).top);	
 			} 
 		} else {
@@ -6093,7 +5858,7 @@ function getTemplate(self, target, transmitCommand) {
 		}
 	}
 
-	self.customDestroy = function() { console.log("dummy") }
+	self.customDestroy = function() {  }
 
 	self.destroy = function() {
 

@@ -11,7 +11,7 @@ function slider(target) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 50, height: 200 };
+	this.defaultSize = { width: 25, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target);

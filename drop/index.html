@@ -7,7 +7,7 @@
 		<!-- standard includes of nexusUI and jquery-->
 		<script type="text/javascript" src="libraries/jquery.js"></script>
 		<script type="text/javascript" src="libraries/jquery-ui-1.8.2.custom.min.js"></script>
-		<script type="text/javascript" src="libraries/gibber.lib.min.js"></script>
+		<script type="text/javascript" src="libraries/gibber.lib.js"></script>
 		<script type="text/javascript" src="libraries/nexusUI.js"></script>
 		<script type="text/javascript" src="libraries/FileSaver.js"></script>
 
@@ -27,12 +27,13 @@
 			
 			var globaldragid = false;
 			var uicolor = "#0af";
+			var freshpage = true;
 
 			nx.onload = function() {
 				nx.WAenv = true;
 				nx.colorize(uicolor);
 				nx.setTransmissionProtocol("js");
-				nx.showLabels = true;
+				nx.showLabels = false;
 
 				if (!nx.audioStrings) {
 					nx.audioStrings = new Object();
@@ -62,6 +63,11 @@
 				}
 				nx.editOn();
 				nx.startPulse();
+
+				if (freshpage) {
+					setTimeout('recallUILocally("lastnxstate")',100)
+					freshpage = false;
+				}
 			}
 
 			function createObject(data,mousey) {
@@ -109,23 +115,18 @@
 
 	 			Gibber.init();
 
-				Gibber.clear = function(callback) {
+			/*	Gibber.clear = function(callback) {
 					this.out ?	this.out.inputs.length=0 : null;
 					this.analysisUgens ? this.analysisUgens.length=0 : null;
 					this.sequencers ? this.sequencers.length=0 : null;
-					this.callbackArgs ? this.callbackArgs.length=2: null;
-					this.callbackObjects ? this.callbackObjects.length=1 : null;
-					if ("undefined"!=typeof this.out) { 
-						for (var t=!1,i=0;i<this.dirtied.length;i++) {
-							this.dirtied[i].variable===this.out.variable&&(t=!0);
-							t||(this.isDirty=!0,this.dirtied.push(this.out));
-						}
-					} else {
-					   this.isDirty=!0
-					}
+					this.callbackArgs ? this.callbackArgs.length=2 : null;
+					this.callbackObjects ? this.callbackObjects.length=1 : null; 
+					this.out ? Gibberish.dirty(this.out) : null;
 
 					if (callback) { callback() };
-				}
+				} */
+
+			
 
 				// for possibly capturing cmd+c later...
 			/*	$(document).keydown(function (e) {
@@ -153,6 +154,8 @@
 					if (e.srcElement != $("div.ace_content")[0] && e.srcElement != $("div.ace_content")[1]) {
 						hideElementCallbackCode();
 					}
+
+					storeUI("lastnxstate");
 
 			/*		if (e.srcElement = $("#nxui")[0]) {
 						startHighlighting(e);
@@ -198,7 +201,7 @@
 			} 
 */
 			function dragobj(e) {
-				var x1 = $("#"+globaldragid).css("width");
+			/*	var x1 = $("#"+globaldragid).css("width");
 				x1 = x1.replace("px","");
 				x1 /= 2;
 				var y1 = $("#"+globaldragid).css("height");
@@ -211,7 +214,14 @@
 				matrixx = ~~(matrixx/3)*3;
 				matrixy = ~~(matrixy/3)*3;
 
-				$("#"+globaldragid).css("top",matrixy).css("left",matrixx);
+				$("#"+globaldragid).css("top",matrixy).css("left",matrixx); 
+
+				window[].canvas.style.top = ~~(e.pageY-self.height/2)+"px";
+				self.canvas.style.left = ~~(e.pageX-self.width/2)+"px";
+				self.offset = new nx.canvasOffset(nx.findPosition(self.canvas).left,nx.findPosition(self.canvas).top);	 */
+				window[globaldragid].isBeingDragged = true;
+				window[globaldragid].preMove(e);
+			
 			}
 
 			function showSettings() {
@@ -303,21 +313,21 @@
 					$("#addbutt").show(0);
 					$("#editbutt").show(0);
 					nx.editOn();
-					nx.setLabels("on")
+				//	nx.setLabels("on")
 				} else {
 					$("#perfbutt").html("locked")
 					$("#addbutt").hide(0);
 					$("#editbutt").hide(0);
 				//	$("#perfbutt").css("background-color","#9df")
 					nx.editOff();
-					nx.setLabels("off")
+				//	nx.setLabels("off")
 				}
 
 			}
 
 			function storeUI(uiname) {
-				localStorage[uiname] = makeUIjson
-				findUIs();
+				localStorage[uiname] = makeUIjson();
+			//	findUIs();
 
 			}
 
@@ -345,7 +355,10 @@
 
 
 			function recallUILocally(uiname) {
-				buildUIfromJSON(localStorage[uiname])
+			//	if (JSON.parse(uijson)localStorage[uiname]) {
+			//		console.log(localStorage[uiname])
+					buildUIfromJSON(localStorage[uiname])
+			//	}
 			}
 
 			function buildUIfromJSON(uijson) {
@@ -359,10 +372,9 @@
 				// audio
 
 				nx.globalAudioString = nxui.globalAudio;
-				console.log(nxui);
 				showGlobalAudioCode();
 
-				updateGlobalAudio();
+			//	updateGlobalAudio();
 
 
 				nxui = nxui.elements;
@@ -390,9 +402,9 @@
 						globaldragid = thisname;
 						$("#"+thisname).mousemove(function(e) {
 							if (nx.editmode && e.pageX>(parseInt(($(this).width()-20))+parseInt($(this).css("left").replace("px",""))) && e.pageY>(parseInt(($(this).height()-20))+parseInt($(this).css("top").replace("px","")))) {
-								document.body.style.cursor = "se-resize";
+								this.style.cursor = "se-resize";
 							} else {
-								document.body.style.cursor = "pointer";
+								this.style.cursor = "pointer";
 							}
 						}) 
 						nx.audioStrings[thisname] = nxui[i].audioString;
@@ -434,7 +446,12 @@
 
 			function askToStoreUI() {
 				var uiname = prompt("Please name your interface");
-				storeUI(uiname);
+				if (uiname) {
+					console.log(uiname)
+					storeUI(uiname);
+				} else {
+					alert("Please try again with a valid interface name")
+				}
 			}
 
 			function findUIs() {
@@ -470,7 +487,13 @@
 
 			function askToSaveToDB() {
 				var uiname = prompt("Please name your interface");
-				saveToDB(uiname);
+				if (uiname) {
+					console.log(uiname)
+					saveToDB(uiname);
+				} else {
+					alert("Please try again with a valid interface name")
+				}
+				
 			}
 
 			function saveToDB(name) {
@@ -575,6 +598,13 @@
 				} 
 			}
 
+			function saveGlobalAudio() {
+				var ga = globaleditor.getValue()
+				nx.globalAudioString = ga.toString();
+			}
+
+
+
 			nx.allTraffic = function(obj, data) {
 				nx.audioFunctions[obj.canvasID](data)
 			}
@@ -609,11 +639,17 @@
 
 				}
 
-	            var e = $('#roamingcode');
-	            e.not(':animated').css({'opacity': 1 }).effect("scale", {origin:['middle','center'], from:{width:0,height:0}, percent: 100, direction: 'both', easing: "easeOutExpo" }, 300, function() {
+
 
 
 						callbackeditor.setValue(nx.audioStrings[element.canvasID])
+
+
+
+	            var e = $('#roamingcode');
+	            e.not(':animated').css({'opacity': 1 }).effect("scale", {origin:['middle','center'], from:{width:0,height:0}, percent: 100, direction: 'both', easing: "easeOutExpo" }, 300, function() {
+	            	
+
 						//To focus the ace editor
 						callbackeditor.focus();
 						var session = callbackeditor.getSession();
@@ -622,8 +658,6 @@
 						//Go to end of the last line
 						callbackeditor.gotoLine(count, session.getLine(count-1).length);
 						callbackeditor.focus();
-	            	
-
 
 	            });
 
@@ -649,12 +683,20 @@
 			/* global */
 
 			function updateGlobalAudio() {
-				if (Gibber.started) {
+				renderAudio();
+			/*	if (Gibber.started) {
 					Gibber.clear(renderAudio);
+				//	setTimeout(renderAudio, 2000);
+					console.log("started")
 				} else {
 					renderAudio();
-				}
+					console.log("notstarted")
+				} */
 			//	setTimeout(renderAudio, 1000);
+			}
+
+			function clearGlobalAudio() {
+				Gibber.clear();
 			}
 
 			function renderAudio() {
@@ -777,7 +819,7 @@
 				background-color:#fafafa;
 				border-right:solid 1px #ccc;
 				width:200px;
-				z-index:2;
+				z-index:3;
 
 			}
 
@@ -869,7 +911,7 @@
 
 			.dbopt {
 				font-size:13px;
-				color:#0af;
+				color:#048;
 				margin:2px 0px 2px 10px;
 				line-height:25px;
 			}
@@ -927,7 +969,7 @@
 
 				<script>
 
-				var elembuttons = [ "button", "dial", "toggle", "slider", "position", "range", "number", "keyboard", "tilt", "multislider", "multitouch", "envelope", "matrix", "mouse", "typewriter", "strings", "colors", "pixels", "wheel", "vinyl", "joints", "banner" ]
+				var elembuttons = [ "button", "dial", "toggle", "slider", "position", "range", "number", "keyboard", "tilt", "multislider", "multitouch", "envelope", "matrix", "mouse", "typewriter", "string", "colors", "pixels", "wheel", "vinyl", "joints", "banner" ]
 				                     
 
 				for (var i=0;i<elembuttons.length;i++) {
@@ -995,8 +1037,10 @@
 		<div id="codingarea">
 			<div id="L">
 				<div class="title" onclick="toggleIDE()">global js</div>
-				<div id="guiglobalaudio">bla</div>
-				<button id="updateGlobalAudio" onclick="updateGlobalAudio()">Update</button>
+				<div id="guiglobalaudio"></div>
+				<button id="updateGlobalAudio" onclick="updateGlobalAudio()">Run</button>
+				<button id="clearGlobalAudio" onclick="clearGlobalAudio()">Reset</button>
+				
 			</div>
 		</div>
 
@@ -1018,6 +1062,7 @@
     var globaleditor = ace.edit("guiglobalaudio");
     globaleditor.setTheme("ace/theme/monokai");
     globaleditor.getSession().setMode("ace/mode/javascript");
+    globaleditor.on("change", saveGlobalAudio)
     var callbackeditor = ace.edit("guicallback");
     callbackeditor.setTheme("ace/theme/monokai");
     callbackeditor.getSession().setMode("ace/mode/javascript");
@@ -1039,7 +1084,7 @@
 				display:block;
 				box-sizing:border-box;
 				padding-right:220px;
-				z-index:0;
+				z-index:2;
 			}
 
 			#codingarea #L {
@@ -1102,10 +1147,10 @@
 				background-color:#333;
 			}
 
-			#updateGlobalAudio {
+			#updateGlobalAudio, #clearGlobalAudio {
 				position:absolute;
 				bottom:3px;
-				right:3px;
+				right:70px;
 				background-color:#000;
 				color:#ccc;
 				border:solid 1px #ccc;
@@ -1114,6 +1159,9 @@
 				outline:none;
 				cursor:pointer;
 			}
+			 #clearGlobalAudio {
+			 	right:3px;
+			 }
 
 			#updateGlobalAudio:hover {
 				border:solid 1px #fff;
@@ -1122,7 +1170,7 @@
 			}
 
 			#perelement {
-				color:#1ac;
+				color:#06a;
 			}
 
 			#arrow-left {

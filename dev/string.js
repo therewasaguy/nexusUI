@@ -11,7 +11,7 @@ function string(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 200 };
+	this.defaultSize = { width: 100, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -21,7 +21,7 @@ function string(target, transmitCommand) {
 		velocity: 0
 	}
 
-	this.numberofstrings = 8;
+	this.numberofstrings = 5;
 	this.strings = new Array();
 	this.abovestring = new Array();
 	this.friction = 2;

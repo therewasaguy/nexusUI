@@ -11,7 +11,7 @@ function mouse(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 98, height: 100 };
+	this.defaultSize = { width: 75, height: 75 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -34,9 +34,8 @@ function mouse(target, transmitCommand) {
 
 
 	this.init = function() {
-		console.log("mouse init");
-		self.mousing = window.addEventListener("mousemove",  self.preMove, false);
-		self.mousing = window.addEventListener("touchmove",  self.preTouchMove, false);
+		window.addEventListener("mousemove",  self.preMove, false);
+		window.addEventListener("touchmove",  self.preTouchMove, false);
 
 		self.inside.height = self.height-self.lineWidth;
 		self.inside.width = self.width-self.lineWidth;

@@ -12,7 +12,7 @@ function pixels(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 300 };
+	this.defaultSize = { width: 100, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -23,7 +23,7 @@ function pixels(target, transmitCommand) {
 		pixels1.dim = { x: 5, y: 4 }
 	```
 		*/
-	self.dim = { x: 10, y: 10};
+	self.dim = { x: 5, y: 5};
 
 	//define unique attributes
 	/** @property {string}  mode   Define the object's mode: "read" or "write" (default is "write")

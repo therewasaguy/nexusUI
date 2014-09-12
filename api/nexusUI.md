@@ -384,15 +384,7 @@ Range Slider
 | *start* | Range start value (float 0-1)
 | *stop* | Range end value (float 0-1)
 | *size* | Distance between ends (float 0-1)
-<br> sandbox
----------
-Add and move around an unlimited number of 2D points.
-```html
-<canvas nx="sandbox"></canvas>
-```
-<canvas nx="sandbox" style="margin-left:25px"></canvas>
-
-select
+<br> select
 --------
 HTML-style option selector. Outputs the chosen text string.
 ```html

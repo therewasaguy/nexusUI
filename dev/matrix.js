@@ -12,7 +12,7 @@ function matrix(target, transmitCommand) {
 
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 200, height: 200 };
+	this.defaultSize = { width: 100, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -26,7 +26,7 @@ function matrix(target, transmitCommand) {
 		matrix1.draw()
 	```
 	*/
-	this.row = 3;
+	this.row = 4;
 
 	/** @property {integer}  col   Number of columns in the matrix
 	```js
@@ -34,7 +34,7 @@ function matrix(target, transmitCommand) {
 		matrix1.draw()
 	```
 	*/
-	this.col = 3;
+	this.col = 4;
 	
 	this.off = 3;
 	this.cellHgt;

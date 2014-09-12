@@ -3,13 +3,13 @@ function ghost(target) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 200 };
+	this.defaultSize = { width: 200, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target);
 	
 	//define unique attributes
-	this.bufferLength = 1000;
+	this.bufferLength = 300;
 	this.components = new Array();
 	this.buffer = new Array();
 	this.moment = 0;

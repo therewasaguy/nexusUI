@@ -11,7 +11,7 @@ function select(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 200, height: 30 };
+	this.defaultSize = { width: 100, height: 30 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);

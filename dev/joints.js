@@ -11,7 +11,7 @@ function joints(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 300, height: 300 };
+	this.defaultSize = { width: 150, height: 150 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);

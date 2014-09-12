@@ -11,7 +11,7 @@ function wheel(target, transmitCommand) {
 					
 	//self awareness
 	var self = this;
-	this.defaultSize = { width: 150, height: 150 };
+	this.defaultSize = { width: 100, height: 100 };
 	
 	//get common attributes and methods
 	getTemplate(self, target, transmitCommand);
@@ -147,7 +147,6 @@ function wheel(target, transmitCommand) {
 				self.nxTransmit(self.val)
 		} else {
 			for (var i=0;i<self.spokes;i++) {
-				console.log(self.rotation)
 				if (self.rotation - (i/self.spokes)*Math.PI*2 > 0 && self.lastRotation - (i/self.spokes)*Math.PI*2 < 0) {
 					self.val = i
 					self.nxTransmit(self.val)
