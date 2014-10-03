@@ -5577,7 +5577,6 @@ function getTemplate(self, target, transmitCommand) {
 		self.deltaMove.x = 0;
 		self.deltaMove.y = 0;
 		if (nx.editmode) {
-			console.log(self.constructor)
 			if (self.clickPos.x>self.width-20 && self.clickPos.y>self.height-20 && self.getName()!="mouse") {
 				self.isBeingResized = true;
 				if (nx.WAenv) {

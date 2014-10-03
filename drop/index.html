@@ -7,7 +7,7 @@
 		<!-- standard includes of nexusUI and jquery-->
 		<script type="text/javascript" src="libraries/jquery.js"></script>
 		<script type="text/javascript" src="libraries/jquery-ui-1.8.2.custom.min.js"></script>
-		<script type="text/javascript" src="libraries/gibberish.js"></script>
+	<!--	<script type="text/javascript" src="libraries/gibberish.js"></script> -->
 		<script type="text/javascript" src="libraries/gibber.lib.js"></script>
 		<script type="text/javascript" src="libraries/nexusUI.js"></script>
 		<script type="text/javascript" src="libraries/FileSaver.js"></script>
@@ -379,13 +379,20 @@
 
 				// audio
 
-				nx.globalAudioString = nxui.globalAudio;
+				//check for global audio property
+				if (nxui.globalAudio) {
+					nx.globalAudioString = nxui.globalAudio;
+				} else {
+					nx.globalAudioString = defaultglobalaudio;
+				}
 				showGlobalAudioCode();
 
-			//	updateGlobalAudio();
-
-
-				nxui = nxui.elements;
+				//check for elements property
+				if (nxui.elements) {
+					nxui = nxui.elements;
+				}
+				//otherwise assume list is only elements
+				
 
 				for (var i=0;i<nxui.length;i++) {
 
@@ -455,7 +462,6 @@
 			function askToStoreUI() {
 				var uiname = prompt("Please name your interface");
 				if (uiname) {
-					console.log(uiname)
 					storeUI(uiname);
 				} else {
 					alert("Please try again with a valid interface name")
@@ -496,7 +502,6 @@
 			function askToSaveToDB() {
 				var uiname = prompt("Please name your interface");
 				if (uiname) {
-					console.log(uiname)
 					saveToDB(uiname);
 				} else {
 					alert("Please try again with a valid interface name")
@@ -594,7 +599,6 @@
 
 			function saveCallback() {
 				var callback = callbackeditor.getValue()
-				console.log(callback)
 				nx.audioStrings[globaldragid] = callback.toString();
 
 				try {
