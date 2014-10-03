@@ -7,6 +7,7 @@
 		<!-- standard includes of nexusUI and jquery-->
 		<script type="text/javascript" src="libraries/jquery.js"></script>
 		<script type="text/javascript" src="libraries/jquery-ui-1.8.2.custom.min.js"></script>
+		<script type="text/javascript" src="libraries/gibberish.js"></script>
 		<script type="text/javascript" src="libraries/gibber.lib.js"></script>
 		<script type="text/javascript" src="libraries/nexusUI.js"></script>
 		<script type="text/javascript" src="libraries/FileSaver.js"></script>
@@ -19,7 +20,7 @@
 		<script>
 
 		 // init web audio
-		 	var c = new window.AudioContext || new webkitAudioContext
+		 	var c = new window.AudioContext || new window.webkitAudioContext
 
 
 			// Setup all of the UI objects you want to use.
@@ -114,6 +115,13 @@
 			$(document).ready(function() {
 
 	 			Gibber.init();
+
+	 	/*		Gibberish.init()
+				Gibberish.Time.export()
+				Gibberish.Binops.export() */
+
+				
+
 
 			/*	Gibber.clear = function(callback) {
 					this.out ?	this.out.inputs.length=0 : null;
@@ -954,13 +962,15 @@
 
 				.nxoptimg {
 					float:left;
-					width:45px;
-					height:45px;
+					width:30px;
+					height:30px;
 					margin:0px 0px 0px 0px;
 					padding:9px 10px 9px 9px;
 					//border-radius:3px;
 					//-webkit-border-radius:3px;
 					border:solid 1px #f7f7f7;
+					border-left:solid 0px;
+					border-top:solid 0px;
 				}
 
 			</style>
@@ -1137,7 +1147,7 @@
 				background-color:#000;
 				box-sizing:border-box;
 				padding:10px;
-				font-family:lucida console;
+				font-family:lucida console, courier, sans-serif;
 				font-weight:100;
 				color:#eee;
 				position:absolute;
