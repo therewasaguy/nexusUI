@@ -82,8 +82,16 @@
 					// allowing you to count how many dials already exist on the page
 					// and give your new dial the appropriate index and id: dial3
 					for (j=0;j<nx.elemTypeArr.length;j++) {
-						if (nx.elemTypeArr[j]==nxId) {
+					/*	if (nx.elemTypeArr[j]==nxId) {
 							elemCount++;
+						} */
+						if (nx.nxObjects[j].canvasID.indexOf(nxId)!=-1) {
+							var proxyid = nx.nxObjects[j].canvasID
+							proxyid = proxyid.replace(nxId, "");
+							proxyid = parseInt(proxyid);
+							if (proxyid>elemCount) {
+								elemCount = proxyid;
+							}
 						}
 					}
 					// add your new nexus element type to the element list
@@ -365,7 +373,10 @@
 			function recallUILocally(uiname) {
 			//	if (JSON.parse(uijson)localStorage[uiname]) {
 			//		console.log(localStorage[uiname])
-					buildUIfromJSON(localStorage[uiname])
+					if (localStorage[uiname]!=undefined) {
+						buildUIfromJSON(localStorage[uiname])
+					}
+					
 			//	}
 			}
 
@@ -564,11 +575,40 @@
 			function loadDB(callback) {
 
 				$.ajax({
+					type: "GET",
+				    url: "http://nexus.cct.lsu.edu:8000/nexus_uis.json",
+				    crossDomain: true,
+	  				dataType: 'json',
+				    contentType: "application/json",
+			        success: function(data) {
+			        	callback(data);
+			        },
+			        error: function(err) {
+			        	console.log(err)
+			        }
+				})
+
+			/*	jQuery.ajax({
+				    type: "GET",
+				    url: "http://nexus.cct.lsu.edu:8000/nexus_uis.json",
+				    crossDomain: true,
+	  				dataType: 'json',
+				    contentType: "application/json",
+				    success: setUIDB,
+				    failure: function(errorMsg) {
+				        console.log(errorMsg);
+				    }
+				});
+ 
+			/*	$.ajax({
 				    url: "proxyget.php",
 				    data: {requrl: "http://nexus.cct.lsu.edu:8000/nexus_uis.json"},
 				    dataType: 'json',
 			        success: callback
-				})
+				}) */
+				 
+
+
 			}
 
 			loadDB(setUIDB);
