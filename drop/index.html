@@ -2,20 +2,24 @@
 <html>
 	<head>
 
-	  	<title>NxDrop</title>
+	  	<title>BRAID: Browser Audio Interface Database</title>
 
 		<!-- standard includes of nexusUI and jquery-->
+		<link rel="shortcut icon" href="info/images/favicon.png" type="image/png" />
 		<script type="text/javascript" src="libraries/jquery.js"></script>
 		<script type="text/javascript" src="libraries/jquery-ui-1.8.2.custom.min.js"></script>
 	<!--	<script type="text/javascript" src="libraries/gibberish.js"></script> -->
 		<script type="text/javascript" src="libraries/gibber.lib.js"></script>
 		<script type="text/javascript" src="libraries/nexusUI.js"></script>
 		<script type="text/javascript" src="libraries/FileSaver.js"></script>
+		<script type="text/javascript" src="libraries/qrcode.min.js"></script>
 
-			<!-- Make mobile display non-scalable and fitting the viewport window -->
-			<meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui" />
-			<meta name="apple-mobile-web-app-capable" content="yes" />
-	  		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+		<!-- Make mobile display non-scalable and fitting the viewport window -->
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+  		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
 
 		<script>
 
@@ -29,6 +33,8 @@
 			var globaldragid = false;
 			var uicolor = "#0af";
 			var freshpage = true;
+			var pagename = "bleepbloop"
+			var loadInPerformance = false;
 
 			nx.onload = function() {
 				nx.WAenv = true;
@@ -62,13 +68,25 @@
 				    $("#sidebar").animate({"right": "-200px"}, 400);
 				    hideIDE();
 				}
-				nx.editOn();
+
+
 				nx.startPulse();
 
+
 				if (freshpage) {
-					setTimeout('recallUILocally("lastnxstate")',100)
+					if (window.location.search) {
+						loadInPerformance = true;
+						var uiname = location.search;
+						uiname = uiname.slice(1);
+						searchDB(uiname)
+						setTimeout("nx.editOff();", 500);
+					} else {
+						setTimeout('recallUILocally("lastnxstate")',100)
+						nx.editOn();
+					}
 					freshpage = false;
 				}
+				
 			}
 
 			function createObject(data,mousey) {
@@ -441,6 +459,11 @@
 				showSettings();
 				$("#edit").hide(0);
 				$("canvas").css("border", "solid 1px #ccc");
+
+				if (loadInPerformance) {
+					updateGlobalAudio();
+					loadInPerformance = false;
+				}
 			}
 
 			nx.isErasing = false;
@@ -547,6 +570,7 @@
 				        console.log(errorMsg);
 				    }
 				}); 
+
 
 			}
 
@@ -794,6 +818,7 @@
 				$("#codingarea").animate({"bottom": "-180px"}, 400);
 			}
 
+
 		</script>
 	</head>
 	<body>
@@ -881,12 +906,27 @@
 				outline:solid 0px;
 			}
 
-			#sidebar #title {
+			#sidebar #titleimg {
 				width:100%;
-				font-size:20px;
+				font-size:11px;
 				border:none;
 				font-weight:normal;
 				color:#ccc;
+				padding:5px 10px 2px;
+				letter-spacing:1px;
+			}
+
+			#sidebar #titleimg img {
+				width:15px;
+				opacity:0.7;
+			}
+
+			#sidebar #title {
+				width:100%;
+				font-size:11px;
+				border:none;
+				font-weight:normal;
+				color:#999;
 				padding:10px;
 				letter-spacing:1px;
 			}
@@ -939,15 +979,23 @@
 				float:left;
 			}
 
-			#elemtrash, #savetodb, #dbtrash, #moreoptions, #locked {
+			#elemtrash, #savetodb, #dbtrash, #moreoptions, #newpage {
 				opacity:0.7;
 				margin-left:5px;
 				cursor:pointer;
+				height:20px;
 			}
 
-			#savetodb, #dbtrash, #moreoptions, #locked {
-				margin-top:6px;
-				margin-bottom:6px;
+			#elemtrash, #locked {
+				opacity:0.7;
+				margin-left:5px;
+				cursor:pointer;
+				height:30px;
+			}
+
+			#savetodb, #dbtrash, #moreoptions, #locked, #newpage {
+				margin-top:4px;
+				margin-bottom:4px;
 			}
 
 
@@ -959,6 +1007,7 @@
 			#locked {
 				position:absolute;
 				right:205px;
+				bottom:5px;
 			}
 
 			.dbopt {
@@ -984,9 +1033,43 @@
 
 		<div id="sidebar">
 
-			<input id="title" type="text" value="DAISy"></input>
+			<div class="header">
+				<a style="text-decoration:none;font-weight:bold;font-size:9pt;color:#888" href="info/">BRAID</a>
+				<a style="position:absolute;right:15px;top:5px;color:#0af;text-decoration:none;" href="info/">?</a>
+			</div>
+
+			<input id="title" type="text" value="Untitled"></input>
 
 
+
+			<!--	<div class="header">
+					Interface
+				</div> -->
+
+				<img src="images/newpage.png" id="newpage" onclick="newPage()" style="margin-left:10px;opacity:0.5">
+				<img src="images/disk.png" id="savetodb" onclick="askToSaveToDB()">
+				<img src="images/trash.png" id="dbtrash" onclick="newPage()">
+				<img src="images/more.png" id="moreoptions" onclick="openEdit()">
+		<!--		<span style="font-size:30px;color:#aaa;font-family:trebuchet ms;margin-top:5px;margin-left:10px;float:left" onclick="toggleIDE()">&lt;&gt;</span> -->
+
+		
+			<a href="javascript:openQR()">QR</a>
+
+			<script>
+
+					function openQR() {
+						qrcode.makeCode("http://www.nexusosc.com/drop/braid/?"+pagename)
+						$("#qrcode_overlay").fadeIn(500);
+					}
+					
+					
+
+/*
+				function openQR() {
+					var output = '<html><head><script type="text/javascript" src="libraries/qrcode.min.js"><\/script></head><body><div style="font-family:gill sans;color:#888;padding:20px">This is a QR Code to the <b>last saved or loaded interface</b> in your browser. If you have not recently saved your interface, do so now.</div><div id="qrcode" style="width:275px;margin:0 auto"></div><script>var qrcode = new QRCode(document.getElementById("qrcode"), "http://nexusosc.com/drop/braid/");<\/script></body></html>';
+					window.open("name","http://www.tester.com","width=320,height=400").document.write(output);
+				} */
+			</script>
 
 			<div class="header">
 				Load
@@ -1069,17 +1152,7 @@
 
 
 
-
-				<div class="header">
-					Interface
-				</div>
-
-				<img src="images/disk.png" id="savetodb" onclick="askToSaveToDB()">
-				<img src="images/trash.png" id="dbtrash" onclick="newPage()">
-				<img src="images/more.png" id="moreoptions" onclick="openEdit()">
 				<img src="images/unlocked.png" id="locked" onclick="perform()">
-				<span style="font-size:30px;color:#aaa;font-family:trebuchet ms;margin-top:5px;margin-left:10px;float:left" onclick="toggleIDE()">&lt;&gt;</span>
-
 
 
 			</div>
@@ -1273,6 +1346,23 @@
 			<div id="highlight"></div>
 
 
+			<div id="qrcode_overlay" onclick="$('#qrcode_overlay').fadeOut(200)" style="display:none;width:100%;height:100%;position:fixed;top:0px;left:0px;background-color:#f7f7f7;z-index:10">
+
+
+				<div id="qrcode" style="width:275px;margin:40px auto"></div>
+
+
+				<div style="font-family:gill sans;color:#888;width:450px;margin:40px auto;font-size:18px;text-align:justify;line-height:22px"> 
+					This is a QR Code to your last saved or loaded interface. If you have not recently saved your interface, do so now and generate a new QR code.
+				</div>
+
+				<script>
+					var qrcode = new QRCode(document.getElementById("qrcode"), "http://nexusosc.com/drop/braid/");
+				</script>
+
+
+
+			</div>
 
 
 
