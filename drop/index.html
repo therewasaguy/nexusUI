@@ -478,22 +478,80 @@
 
 
 
-
-
 			/**** COMMUNICATE WITH DB ****/
 
 
 			function askToSaveToDB() {
-				var uiname = prompt("Please name your interface");
+				var uiname = prompt("Please name your interface", pageName);
+				var overwriting = false;
 				if (uiname) {
-					saveToDB(uiname);
-				} else {
-					alert("Please try again with a valid interface name")
+
+					for (var i=0;i<UIDB.length;i++) {
+		        		if (UIDB[i].name) {
+			        		if (UIDB[i].name.toLowerCase() == uiname.toLowerCase()) {
+			           			currentUI = UIDB[i];
+			           			overwriting = true;
+			           			break;
+			           		}
+			           	}
+		        	}
+
+		        	if (overwriting) {
+
+						var confirmoverwrite = confirm("Are you sure you want to overwrite the interface:" + currentUI.name);
+
+			        	if (!confirmoverwrite) { return }
+
+						updateToDB(uiname)
+
+					} else {
+
+						saveToDB(uiname);
+
+		        	}
+		        	
 				}
 				
 			}
 
 			function saveToDB(name) {
+				
+				setPageName(name);
+
+			//	clearSearchbar();
+
+				var mydata = {
+					"nexus_ui": {
+						"name": name,
+						"transmission": "test",
+						"uiJSON": makeUIjson()
+					}
+				}
+				
+				mydata = JSON.stringify(mydata);
+
+				hideSearchbar()
+
+				jQuery.ajax({
+				    type: "POST",
+				    url: "http://nexus.cct.lsu.edu:8000/nexus_uis",
+				    data: mydata,
+				    crossDomain: true,
+	  				dataType: 'json',
+				    contentType: "application/json",
+				    success: function(){
+				        loadDB(setUIDB);
+				    },
+				    failure: function(errorMsg) {
+				        console.log(errorMsg);
+				    }
+				}); 
+
+
+			}
+
+
+			function updateToDB(name) {
 				
 				setPageName(name);
 
@@ -507,15 +565,18 @@
 				
 				mydata = JSON.stringify(mydata);
 
+				hideSearchbar()
 
+				console.log(currentUI.name);
+				console.log(currentUI.url);
 				jQuery.ajax({
-				    type: "POST",
-				    url: "http://nexus.cct.lsu.edu:8000/nexus_uis",
+				    type: "PUT",
+				    url: currentUI.url,
 				    data: mydata,
 				    crossDomain: true,
 	  				dataType: 'json',
 				    contentType: "application/json",
-				    success: function(data){
+				    success: function(){
 				        loadDB(setUIDB);
 				    },
 				    failure: function(errorMsg) {
@@ -525,6 +586,8 @@
 
 
 			}
+
+
 
 			var UItoLoad;
 
@@ -552,6 +615,8 @@
 
 			function loadDB(callback) {
 
+				console.log(3)
+
 				$.ajax({
 					type: "GET",
 				    url: "http://nexus.cct.lsu.edu:8000/nexus_uis.json",
@@ -559,8 +624,16 @@
 	  				dataType: 'json',
 				    contentType: "application/json",
 			        success: function(data) {
+			        	console.log(3.5)
 			        	callback(data);
-			        	console.log(data);
+				        for (var i=0;i<data.length;i++) {
+			        		if (data[i].name) {
+				        		if (data[i].name.toLowerCase() == pageName.toLowerCase()) {
+				           			currentUI = data[i];
+				           			return;
+				           		}
+				           	}
+			        	}
 			        },
 			        error: function(err) {
 			        	console.log(err)
@@ -572,7 +645,11 @@
 			loadDB(setUIDB);
 
 			function setUIDB(data) {
+
+				console.log(4)
+
 				UIDB = data;
+				showSearchbar()
 			}
 
 			function sortDB(name) {
@@ -601,15 +678,20 @@
 			function deleteFromDB() {
 				if (confirm("Are you sure you want to delete "+pageName+"?")) {
 
+					hideSearchbar()
+
+					console.log(1)
+
 					if (currentUI) {
+						console.log(currentUI.url)
 						$.ajax({
 					        url: currentUI.url,
 					        type: 'DELETE',
-					      //  headers: {"Id": Id, "bolDeleteReq" : bolDeleteReq},
 					        crossDomain: true,
 			  				dataType: 'json',
 						    contentType: "application/json",
 					        success: function(data) {
+								console.log(2)
 					        	loadDB(setUIDB);
 					        },
 					        error: function(err) {
@@ -617,14 +699,33 @@
 					        }
 					    });
 
+					} else {
+						showSearchbar()
 					}
 
 					newPage();
-					$("#searchresults").html("");
 
 
 				}
 			}
+
+
+
+			function hideSearchbar() {
+				$("#loadsection").hide(0)
+				$("#loadsection_loading").show(0)
+				clearSearchbar()
+			}
+			function showSearchbar() {
+				$("#loadsection").show(0)
+				$("#loadsection_loading").hide(0)
+			}
+			function clearSearchbar() {
+				$("#searchresults").html("");
+				$("#searchdb").val("")
+			}
+
+
 
 
 
@@ -755,12 +856,15 @@
 			/* new page */
 
 			function newPage() {
+				currentUI = false;
 				nx.nxObjects = new Array();
+				nx.elemTypeArr = new Array();
 				$("#nxui").html("");
 				nx.globalAudioString = defaultglobalaudio;
 				showGlobalAudioCode();
 				updateGlobalAudio()
 				callbackeditor.setValue("");
+				setPageName("Untitled")
 			}
 
 			var defaultglobalaudio = "\n// Welcome to Nexus's web audio environment!\n// AudioContext is initialized as variable c \n\n";
@@ -897,11 +1001,11 @@
 
 			#sidebar #title {
 				width:100%;
-				font-size:11px;
+				font-size:12px;
 				border:none;
 				font-weight:normal;
 				color:#999;
-				padding:10px;
+				padding:6px 10px;
 				letter-spacing:1px;
 			}
 
@@ -968,8 +1072,8 @@
 			}
 
 			#savetodb, #dbtrash, #moreoptions, #locked, #newpage {
-				margin-top:4px;
-				margin-bottom:4px;
+				margin-top:3px;
+				margin-bottom:3px;
 			}
 
 
@@ -1027,11 +1131,34 @@
 		<!--		<span style="font-size:30px;color:#aaa;font-family:trebuchet ms;margin-top:5px;margin-left:10px;float:left" onclick="toggleIDE()">&lt;&gt;</span> -->
 
 
-			<div style="display:inline;height:40px;float:right;padding-right:15px">
+				<div style="display:inline;height:40px;float:right;padding-right:15px">
 		
-			<a href="javascript:openQR()" style="color:#c3c3c3;line-height:30px;font-size:17px;text-decoration:none;font-weight:bold">QR</a>
+					<a href="javascript:openQR()" style="color:#c3c3c3;line-height:30px;font-size:17px;text-decoration:none;font-weight:bold">QR</a>
 
-			</div>
+				</div>
+
+				<div id="colorcontrols">
+					<input type="color" value="#00aaff" id="accentcolor" name="accentcolor" oninput="nx.colorize(this.value)">
+					<input type="color" value="#cccccc" id="bordercolor" name="bordercolor" oninput="nx.colorize('border',this.value)">
+					<input type="color" value="#f7f7f7" id="fillcolor" name="fillcolor" oninput="nx.colorize('fill',this.value)">
+					<input type="color" value="#ffffff" id="bgcolor" name="bgcolor" oninput="$('#nxui').css('background-color',this.value)">
+				</div>
+
+				<style>
+
+				#colorcontrols {
+
+					padding:3px 10px;
+					background-color:#f3f3f3;
+				}
+				#colorcontrols input {
+					width:20px;
+					height:20px;
+					margin:3px 0px;
+					padding:1px;
+					left:0px;
+				}
+				</style>
 
 			<script>
 
@@ -1054,10 +1181,21 @@
 				Load
 			</div>
 
+			<div id="loadsection">
+
 			<input id="searchdb" name="searchdb" type="text" placeholder="Search UI Database" onkeyup="if (event.keyCode == 13) {searchDB(this.value)} else {sortDB(this.value)}">
 			</input>
 
 			<div id="searchresults"></div>
+
+			</div>
+
+
+			<div id="loadsection_loading" style="display:none;width:100%;">
+
+				<img src="images/loading.gif" style="width:20px;margin:15px auto;display:block">
+
+			</div>
 
 
 			<div class="header">
