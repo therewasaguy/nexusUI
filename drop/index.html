@@ -16,7 +16,7 @@
 
 
 		<!-- Make mobile display non-scalable and fitting the viewport window -->
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no, minimal-ui" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
   		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
@@ -24,7 +24,9 @@
 		<script>
 
 		 // init web audio
-		 	var c = new window.AudioContext || new window.webkitAudioContext
+		 	//var c = new window.AudioContext || new window.webkitAudioContext
+		 	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    		var c = new window.AudioContext();
 
 
 			// Setup all of the UI objects you want to use.
@@ -33,7 +35,7 @@
 			var globaldragid = false;
 			var uicolor = "#0af";
 			var freshpage = true;
-			var pagename = "bleepbloop"
+			var pageName = "bleepbloop";
 			var loadInPerformance = false;
 
 			nx.onload = function() {
@@ -466,59 +468,7 @@
 				}
 			}
 
-			nx.isErasing = false;
 
-			function toggleErase() {
-				if (nx.isErasing) {
-					nx.isErasing = false;
-					$("#erasebutt").css("background-color", "#ddd")
-					$("#erasebutt").html("Erasing is off")
-				} else {
-					nx.isErasing = true;
-					$("#erasebutt").css("background-color", "#8cf")
-					$("#erasebutt").html("Erasing is on")
-				}
-			}
-
-			function toggleResize() {
-				if (nx.isResizing) {
-					nx.isResizing = false;
-					$("#resizebutt").css("background-color", "#ddd")
-					$("#resizebutt").html("Resizing is off")
-				} else {
-					nx.isResizing = true;
-					$("#resizebutt").css("background-color", "#8cf")
-					$("#resizebutt").html("Resizing is on")
-				}
-			}
-
-
-			function askToStoreUI() {
-				var uiname = prompt("Please name your interface");
-				if (uiname) {
-					storeUI(uiname);
-				} else {
-					alert("Please try again with a valid interface name")
-				}
-			}
-
-			function findUIs() {
-				var htmlstr = ""
-				for (var key in localStorage) {
-					htmlstr += '<div class="butt" onclick="recallUILocally(\''+key+'\')" style="background-color:#cef;width:40%;margin-left:15%;margin-right:0px;float:left;">'+key+'</div>'
-					htmlstr += '<div class="butt" onclick="deleteUI(\''+key+'\')" style="background-color:#faa;width:20%;margin-left:5%;margin-right:0px;float:left">Delete</div>'
-				}
-
-				$("#loadeduis").html(htmlstr)
-
-			}
-
-			function deleteUI(uiname) {
-				if (confirm("Are you sure you want to delete "+uiname+"?")) {
-					delete localStorage[uiname];
-					findUIs();
-				}
-			}
 
 			function changeColor(newcolor) {
 				uicolor = newcolor;
@@ -544,6 +494,8 @@
 			}
 
 			function saveToDB(name) {
+				
+				setPageName(name);
 
 				var mydata = {
 					"nexus_ui": {
@@ -579,6 +531,7 @@
 			function searchDB(name) {
 
 				UItoLoad = name;
+				setPageName(name);
 
 				loadDB(function (data) {
 					setUIDB(data)
@@ -586,6 +539,7 @@
 		        		if (data[i].name) {
 			        		if (data[i].name.toLowerCase() == UItoLoad.toLowerCase()) {
 			           			buildUIfromJSON(data[i].uiJSON);
+			           			currentUI = data[i];
 			           			return;
 			           		}
 			           	}
@@ -606,32 +560,12 @@
 				    contentType: "application/json",
 			        success: function(data) {
 			        	callback(data);
+			        	console.log(data);
 			        },
 			        error: function(err) {
 			        	console.log(err)
 			        }
 				})
-
-			/*	jQuery.ajax({
-				    type: "GET",
-				    url: "http://nexus.cct.lsu.edu:8000/nexus_uis.json",
-				    crossDomain: true,
-	  				dataType: 'json',
-				    contentType: "application/json",
-				    success: setUIDB,
-				    failure: function(errorMsg) {
-				        console.log(errorMsg);
-				    }
-				});
- 
-			/*	$.ajax({
-				    url: "proxyget.php",
-				    data: {requrl: "http://nexus.cct.lsu.edu:8000/nexus_uis.json"},
-				    dataType: 'json',
-			        success: callback
-				}) */
-				 
-
 
 			}
 
@@ -658,6 +592,41 @@
 			}
 
 			nx.audioFunctions = new Object();
+
+
+			var currentUI = false;
+
+
+
+			function deleteFromDB() {
+				if (confirm("Are you sure you want to delete "+pageName+"?")) {
+
+					if (currentUI) {
+						$.ajax({
+					        url: currentUI.url,
+					        type: 'DELETE',
+					      //  headers: {"Id": Id, "bolDeleteReq" : bolDeleteReq},
+					        crossDomain: true,
+			  				dataType: 'json',
+						    contentType: "application/json",
+					        success: function(data) {
+					        	loadDB(setUIDB);
+					        },
+					        error: function(err) {
+					        	console.log(err)
+					        }
+					    });
+
+					}
+
+					newPage();
+					$("#searchresults").html("");
+
+
+				}
+			}
+
+
 
 			/* inline coding */
 
@@ -690,13 +659,13 @@
 				globaleditor.setValue(nx.globalAudioString)
 
 						//To focus the ace editor
-						globaleditor.focus();
+				//		globaleditor.focus();
 						var session = globaleditor.getSession();
 						//Get the number of lines
 						var count = session.getLength();
 						//Go to end of the last line
 						globaleditor.gotoLine(count, session.getLine(count-1).length);
-						globaleditor.focus();
+				//		globaleditor.focus();
 	            	
 			}
 
@@ -718,7 +687,7 @@
 
 
 
-						callbackeditor.setValue(nx.audioStrings[element.canvasID])
+				callbackeditor.setValue(nx.audioStrings[element.canvasID])
 
 
 
@@ -815,7 +784,12 @@
 			}
 
 			function hideIDE() {
-				$("#codingarea").animate({"bottom": "-180px"}, 400);
+				$("#codingarea").animate({"bottom": "-200px"}, 400);
+			}
+
+			function setPageName(name) {
+				pageName = name;
+				$("#title").val(name);
 			}
 
 
@@ -1048,17 +1022,22 @@
 
 				<img src="images/newpage.png" id="newpage" onclick="newPage()" style="margin-left:10px;opacity:0.5">
 				<img src="images/disk.png" id="savetodb" onclick="askToSaveToDB()">
-				<img src="images/trash.png" id="dbtrash" onclick="newPage()">
-				<img src="images/more.png" id="moreoptions" onclick="openEdit()">
+				<img src="images/trash.png" id="dbtrash" onclick="deleteFromDB()">
+			<!--	<img src="images/more.png" id="moreoptions" onclick="openEdit()"> -->
 		<!--		<span style="font-size:30px;color:#aaa;font-family:trebuchet ms;margin-top:5px;margin-left:10px;float:left" onclick="toggleIDE()">&lt;&gt;</span> -->
 
+
+			<div style="display:inline;height:40px;float:right;padding-right:15px">
 		
-			<a href="javascript:openQR()">QR</a>
+			<a href="javascript:openQR()" style="color:#c3c3c3;line-height:30px;font-size:17px;text-decoration:none;font-weight:bold">QR</a>
+
+			</div>
 
 			<script>
 
 					function openQR() {
-						qrcode.makeCode("http://www.nexusosc.com/drop/braid/?"+pagename)
+						qrcode.makeCode("http://www.nexusosc.com/drop/braid/?"+pageName)
+						$("#qrtitle").html(pageName);
 						$("#qrcode_overlay").fadeIn(500);
 					}
 					
@@ -1349,10 +1328,13 @@
 			<div id="qrcode_overlay" onclick="$('#qrcode_overlay').fadeOut(200)" style="display:none;width:100%;height:100%;position:fixed;top:0px;left:0px;background-color:#f7f7f7;z-index:10">
 
 
-				<div id="qrcode" style="width:275px;margin:40px auto"></div>
+				<div id="qrcode" style="width:275px;margin:40px auto 20px"></div>
 
 
-				<div style="font-family:gill sans;color:#888;width:450px;margin:40px auto;font-size:18px;text-align:justify;line-height:22px"> 
+				<div style="font-family:gill sans;color:#888;width:450px;margin:20px auto;font-size:18px;text-align:left;line-height:22px;">http://nexusosc.com/drop/braid?<span style="font-weight:bold" id="qrtitle" ></span></div>
+
+
+				<div style="font-family:gill sans;color:#888;width:450px;margin:20px auto;font-size:18px;text-align:justify;line-height:22px"> 
 					This is a QR Code to your last saved or loaded interface. If you have not recently saved your interface, do so now and generate a new QR code.
 				</div>
 
