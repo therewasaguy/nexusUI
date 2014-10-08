@@ -40,7 +40,9 @@
 
 			nx.onload = function() {
 				nx.WAenv = true;
-				nx.colorize(uicolor);
+				if (freshpage) {
+					nx.colorize(uicolor);
+				}
 				nx.setTransmissionProtocol("js");
 				nx.showLabels = false;
 
@@ -67,7 +69,7 @@
 				  	$("canvas").css("border", "none");
 				  	$("body").css("background", "#fff");
 				    $("#locked").attr("src","images/locked.png");
-				    $("#sidebar").animate({"right": "-200px"}, 400);
+				    $("#sidebar").animate({"right": "-165px"}, 400);
 				    hideIDE();
 				}
 
@@ -119,7 +121,7 @@
 					var idNum = elemCount + 1;
 					var thisname = nxId + idNum;
 					if(nxId) {
-						$("#nxui").append('<canvas id="'+thisname+'" nx="'+nxId+'" style="position:absolute;top:'+mousey+'px;right:200px;"></canvas>');
+						$("#nxui").append('<canvas id="'+thisname+'" nx="'+nxId+'" style="position:absolute;top:'+mousey+'px;right:165px;"></canvas>');
 						eval(thisname + " = new "+nxId+"('"+thisname+"', '../servers/php/lib/nexusOSCRelay.php', "+idNum+");");
 						eval(thisname+".init()");
 						globaldragid = thisname;
@@ -370,10 +372,18 @@
 			function makeUIjson() {
 				var jsonui = {
 					"globalAudio": nx.globalAudioString,
-					"elements": new Array()
+					"elements": new Array(),
+					"settings": {
+						"colors": nx.colors,
+						"votes": 0,
+						"timestamp": new Date()
+					}
 				}
 
 				for (var i=0;i<nx.nxObjects.length;i++) {
+
+					var objsettings = nx.nxObjects[i].settings ? nx.nxObjects[i].settings : "";
+					
 					jsonui.elements[i] = {
 						type: nx.nxObjects[i].getName(),
 						canvasID: nx.nxObjects[i].canvasID,
@@ -382,7 +392,8 @@
 						height: nx.nxObjects[i].height,
 						"top": nx.nxObjects[i].offset.top,
 						"left": nx.nxObjects[i].offset.left,
-						"audioString": nx.audioStrings[nx.nxObjects[i].canvasID]
+						"audioString": nx.audioStrings[nx.nxObjects[i].canvasID],
+						"settings": objsettings
 					}
 				}
 				return JSON.stringify(jsonui);
@@ -418,7 +429,12 @@
 				}
 				showGlobalAudioCode();
 
-				//check for elements property
+				if (nxui.settings) {
+					renderSettings(nxui.settings);
+				}
+				
+
+				//check for elements property, and overwrite nxui with just the elements
 				if (nxui.elements) {
 					nxui = nxui.elements;
 				}
@@ -465,6 +481,13 @@
 				if (loadInPerformance) {
 					updateGlobalAudio();
 					loadInPerformance = false;
+				}
+			}
+
+			function renderSettings(settings) {
+				if (settings.colors) {
+					console.log(settings.colors);
+					nx.colors = settings.colors;
 				}
 			}
 
@@ -902,6 +925,11 @@
 	<body>
 		<style>
 
+			body {
+				margin:0px;
+				padding:0px;
+			}
+
 			.butt {
 				text-align:center;
 				width:45%;
@@ -973,7 +1001,7 @@
 				height:100%;
 				background-color:#fafafa;
 				border-right:solid 1px #ccc;
-				width:200px;
+				width:165px;
 				z-index:3;
 
 			}
@@ -1028,7 +1056,7 @@
 				margin:3px;
 				display:block;
 				box-sizing:border-box;
-				width:194px;
+				width:159px;
 			}
 
 			#elemlist {
@@ -1053,7 +1081,7 @@
 			}
 
 			#oscpath {
-				width:150px;
+				width:120px;
 				float:left;
 			}
 
@@ -1084,7 +1112,7 @@
 
 			#locked {
 				position:absolute;
-				right:205px;
+				right:170px;
 				bottom:5px;
 			}
 
@@ -1106,6 +1134,10 @@
 		</style>
 
 
+		<div style="width:568px;height:320px;border:dashed 1px #aaa;position:absolute;top:0px;left:0px;">
+			<div style="background-color:#eee;font-size:8pt;font-family:gill sans;color:#bbb;top:0px;right:0px;padding:3px;position:absolute;">iPhone 5</div>
+		</div>
+
 		<div id="nxui"></div>
 		
 
@@ -1113,7 +1145,7 @@
 
 			<div class="header">
 				<a style="text-decoration:none;font-weight:bold;font-size:9pt;color:#888" href="info/">BRAID</a>
-				<a style="position:absolute;right:15px;top:5px;color:#0af;text-decoration:none;" href="info/">?</a>
+				<a style="position:absolute;right:15px;top:5px;color:#0af;text-decoration:none;" href="info/">info</a>
 			</div>
 
 			<input id="title" type="text" value="Untitled"></input>
@@ -1138,7 +1170,7 @@
 				</div>
 
 				<div id="colorcontrols">
-					<input type="color" value="#00aaff" id="accentcolor" name="accentcolor" oninput="nx.colorize(this.value)">
+					<input type="color" value="#00aaff" id="accentcolor" name="accentcolor" oninput="nx.colorize(this.value);nx.colors.accent=this.value">
 					<input type="color" value="#cccccc" id="bordercolor" name="bordercolor" oninput="nx.colorize('border',this.value)">
 					<input type="color" value="#f7f7f7" id="fillcolor" name="fillcolor" oninput="nx.colorize('fill',this.value)">
 					<input type="color" value="#ffffff" id="bgcolor" name="bgcolor" oninput="$('#nxui').css('background-color',this.value)">
@@ -1206,8 +1238,8 @@
 
 				.nxoptimg {
 					float:left;
-					width:30px;
-					height:30px;
+					width:35px;
+					height:35px;
 					margin:0px 0px 0px 0px;
 					padding:9px 10px 9px 9px;
 					//border-radius:3px;
