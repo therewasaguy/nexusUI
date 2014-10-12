@@ -26,7 +26,7 @@
 		 // init web audio
 		 	//var c = new window.AudioContext || new window.webkitAudioContext
 		 	window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    		var c = new window.AudioContext();
+    		var ctx = new window.AudioContext();
 
 
 			// Setup all of the UI objects you want to use.
@@ -49,7 +49,7 @@
 				if (!nx.audioStrings) {
 					nx.audioStrings = new Object();
 					nx.globalAudioString = "";
-					newPage();
+					newPage(true);
 				}
 
 				nx.editOn = function() {
@@ -64,6 +64,7 @@
 				}
 
 				nx.editOff = function() {
+					hideHighlight();
 				  	nx.editmode = false;
 				  	document.body.style.cursor = "pointer";
 				  	$("canvas").css("border", "none");
@@ -187,27 +188,29 @@
 				$(".nxbutt").mousedown(function(e) {
 					createObject($(this).html());
 					$(".overlay").hide(0);
+					hideHighlight();
 				})
 				$(document).mousedown(function(e) {
 					if (e.srcElement != $("div.ace_content")[0] && e.srcElement != $("div.ace_content")[1]) {
 						hideElementCallbackCode();
 					}
 
-					storeUI("lastnxstate");
 
-			/*		if (e.srcElement = $("#nxui")[0]) {
+					if (e.srcElement == $("#nxui")[0]) {
+						hideHighlight();
 						startHighlighting(e);
-					} */
+					}
 				});
 
-			/*	$(document).mousemove(function(e) {
+				$(document).mousemove(function(e) {
 					setHighlight(e);
-				});*/
+				});
 
 				$(document).mouseup(function() {
+					storeUI("lastnxstate");
 					document.removeEventListener("mousemove", dragobj, true)
 					$("#sidebar").css("opacity",1);
-			//		stopHighlighting();
+					stopHighlighting();
 				});
 
 
@@ -220,47 +223,118 @@
 					nx.editOff();
 				});
 
+				$("#highlight").draggable({
+					drag: function(event, ui) {
+						massMove(ui);
+					}
+				});
+
 			})
-/*
+
+			highlighting = false;
+			var hlaxis = new Object();
+
 			function startHighlighting(e) {
+
+				hlaxis = {
+					left: e.clientX,
+					top: e.clientY
+				}
+
+				highlighting = true;
+				$("#highlight").css("opacity","0.2");
 				$("#highlight").show(0);
 				$("#highlight").css("left", e.clientX);
 				$("#highlight").css("top", e.clientY);
 				$("#highlight").css("width", 0);
 				$("#highlight").css("height", 0);
+
+				$("body").css("user-select", "none");
+				$("body").css("-moz-user-select", "none");
+				$("body").css("-webkit-user-select", "none");
 			} 
 			function setHighlight(e) {
-				console.log($("#highlight").css("left"));
-				$("#highlight").css("width", e.clientX-parseInt($("#highlight").css("left")));
-				$("#highlight").css("height", e.clientY-parseInt($("#highlight").css("top")));
+				if (highlighting) {
+					if (e.clientX > hlaxis.left) {
+						$("#highlight").css("width", e.clientX-parseInt($("#highlight").css("left")));
+					} else if (e.clientX <= hlaxis.left ) {
+						$("#highlight").css("width", hlaxis.left - e.clientX + "px");
+						$("#highlight").css("left", e.clientX);
+					}
+
+					if (e.clientY > hlaxis.top) {
+						$("#highlight").css("height", e.clientY-parseInt($("#highlight").css("top")));
+					} else if (e.clientY <= hlaxis.top ) {
+						$("#highlight").css("height", hlaxis.top - e.clientY + "px");
+						$("#highlight").css("top", e.clientY);
+
+					}
+					
+					
+				}
 			}
 			function stopHighlighting(e) {
-				$("#highlight").hide(0);
+			//	$("#highlight").hide(0);
+				highlighting = false;
+				$("#highlight").css("opacity","0.1");
+				massHighlight();
 			} 
-*/
+			function hideHighlight(e) {
+				$("#highlight").hide(0);
+				unhighlightAll();
+			}
+
+			var highlightList = new Array();
+			var hldata = new Array();
+
+			function massHighlight() {
+				var hlDim = {
+					left: parseInt($("#highlight").css("left")),
+					top: parseInt($("#highlight").css("top")),
+					width: parseInt($("#highlight").css("width")),
+					height: parseInt($("#highlight").css("height"))
+				}
+				for (var i=0;i<nx.nxObjects.length;i++) {
+					var widg = nx.nxObjects[i];
+					if ( widg.offset.left>=hlDim.left && widg.offset.top>=hlDim.top && widg.offset.left+widg.width<=hlDim.left+hlDim.width && widg.offset.top+widg.height<=hlDim.top + hlDim.height) {
+						widg.hlstart = {
+							left: widg.offset.left,
+							top: widg.offset.top
+						}
+						highlightList.push(widg)
+
+					}
+				}
+			}
+
+			function unhighlightAll() {
+				highlightList = new Array();
+				//$("canvas").css("border", "solid 1px #ccc");
+			}
+
+			function massMove(e) {
+
+				var hlshift = {
+					left: e.position.left - e.originalPosition.left,
+					top: e.position.top - e.originalPosition.top
+				}
+
+				for (var i=0;i<highlightList.length;i++) {
+					var widg = highlightList[i];
+					widg.canvas.style.left = widg.hlstart.left + hlshift.left + "px";
+					widg.canvas.style.top = widg.hlstart.top + hlshift.top + "px";
+					widg.offset = new nx.canvasOffset(nx.findPosition(widg.canvas).left,nx.findPosition(widg.canvas).top);
+				}
+
+			}
+
 			function dragobj(e) {
-			/*	var x1 = $("#"+globaldragid).css("width");
-				x1 = x1.replace("px","");
-				x1 /= 2;
-				var y1 = $("#"+globaldragid).css("height");
-				y1 = y1.replace("px","");
-				y1 /= 2;
-
-				var matrixy = e.pageY - y1;
-				var matrixx = e.pageX - x1;
-
-				matrixx = ~~(matrixx/3)*3;
-				matrixy = ~~(matrixy/3)*3;
-
-				$("#"+globaldragid).css("top",matrixy).css("left",matrixx); 
-
-				window[].canvas.style.top = ~~(e.pageY-self.height/2)+"px";
-				self.canvas.style.left = ~~(e.pageX-self.width/2)+"px";
-				self.offset = new nx.canvasOffset(nx.findPosition(self.canvas).left,nx.findPosition(self.canvas).top);	 */
 				window[globaldragid].isBeingDragged = true;
 				window[globaldragid].preMove(e);
 			
 			}
+
+
 
 			function showSettings() {
 				$("#oscpath").attr("value", eval(globaldragid+".oscName"));
@@ -486,7 +560,6 @@
 
 			function renderSettings(settings) {
 				if (settings.colors) {
-					console.log(settings.colors);
 					nx.colors = settings.colors;
 				}
 			}
@@ -590,8 +663,6 @@
 
 				hideSearchbar()
 
-				console.log(currentUI.name);
-				console.log(currentUI.url);
 				jQuery.ajax({
 				    type: "PUT",
 				    url: currentUI.url,
@@ -624,8 +695,11 @@
 		        	for (var i=0;i<data.length;i++) {
 		        		if (data[i].name) {
 			        		if (data[i].name.toLowerCase() == UItoLoad.toLowerCase()) {
+
+
 			           			buildUIfromJSON(data[i].uiJSON);
 			           			currentUI = data[i];
+								clearGlobalAudio();
 			           			return;
 			           		}
 			           	}
@@ -638,8 +712,6 @@
 
 			function loadDB(callback) {
 
-				console.log(3)
-
 				$.ajax({
 					type: "GET",
 				    url: "http://nexus.cct.lsu.edu:8000/nexus_uis.json",
@@ -647,7 +719,6 @@
 	  				dataType: 'json',
 				    contentType: "application/json",
 			        success: function(data) {
-			        	console.log(3.5)
 			        	callback(data);
 				        for (var i=0;i<data.length;i++) {
 			        		if (data[i].name) {
@@ -668,9 +739,6 @@
 			loadDB(setUIDB);
 
 			function setUIDB(data) {
-
-				console.log(4)
-
 				UIDB = data;
 				showSearchbar()
 			}
@@ -702,8 +770,6 @@
 				if (confirm("Are you sure you want to delete "+pageName+"?")) {
 
 					hideSearchbar()
-
-					console.log(1)
 
 					if (currentUI) {
 						console.log(currentUI.url)
@@ -878,19 +944,23 @@
 
 			/* new page */
 
-			function newPage() {
+			function newPage(justloaded) {
 				currentUI = false;
 				nx.nxObjects = new Array();
 				nx.elemTypeArr = new Array();
 				$("#nxui").html("");
-				nx.globalAudioString = defaultglobalaudio;
 				showGlobalAudioCode();
 				updateGlobalAudio()
 				callbackeditor.setValue("");
 				setPageName("Untitled")
+				if (!justloaded) {
+					clearGlobalAudio();
+				} else {
+					nx.globalAudioString = defaultglobalaudio;
+				}
 			}
 
-			var defaultglobalaudio = "\n// Welcome to Nexus's web audio environment!\n// AudioContext is initialized as variable c \n\n";
+			var defaultglobalaudio = "\n// Welcome to Nexus's web audio environment!\n// AudioContext is initialized as variable ctx \n\n";
 
 			var IDEon = true;
 
@@ -1479,7 +1549,7 @@
 
 
 			#highlight {
-				border:solid 1px #06a;
+				border:solid 1px #08b;
 				background-color:#0af;
 				opacity:0.2;
 				width:100px;
