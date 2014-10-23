@@ -236,6 +236,7 @@ function regions(target, transmitCommand) {
 			var dx = self.deltaMove.x;					// change in x
 			var dy = self.deltaMove.y;					// change in y
 
+// TODO: Update clicking from boilerplate code
 															// x = x±ychange + (change in x)
 			self.val[regionClicked].start = (regionX1[selected] + (dy * scaleVal[0])) + (dx * scaleVal[1]);
 			regionX1[selected] = Math.min(Math.max(boxLeft, regionX1[selected]), regionX2[selected]);
