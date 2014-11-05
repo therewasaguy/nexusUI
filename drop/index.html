@@ -26,7 +26,7 @@
 		 // init web audio
 		 	//var c = new window.AudioContext || new window.webkitAudioContext
 		 	window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    		var ctx = new window.AudioContext();
+    		var c = new window.AudioContext();
 
 
 			// Setup all of the UI objects you want to use.
@@ -949,18 +949,19 @@
 				nx.nxObjects = new Array();
 				nx.elemTypeArr = new Array();
 				$("#nxui").html("");
+				nx.globalAudioString = defaultglobalaudio;
 				showGlobalAudioCode();
 				updateGlobalAudio()
 				callbackeditor.setValue("");
 				setPageName("Untitled")
 				if (!justloaded) {
-					clearGlobalAudio();
+				//	clearGlobalAudio();
 				} else {
 					nx.globalAudioString = defaultglobalaudio;
 				}
 			}
 
-			var defaultglobalaudio = "\n// Welcome to Nexus's web audio environment!\n// AudioContext is initialized as variable ctx \n\n";
+			var defaultglobalaudio = "\n// Welcome to Nexus's web audio environment!\n// AudioContext is initialized as variable c \n\n";
 
 			var IDEon = true;
 
