@@ -2,10 +2,10 @@
 <html>
 	<head>
 		<title>Multislider</title>
-		<script type="text/javascript" src="../examples/jquery.js"></script>
-		<script type="text/javascript" src="../nexusUI.js"></script>
+		<script type="text/javascript" src="../jquery.js"></script>
+		<script type="text/javascript" src="../../nexusUI.js"></script>
 		<script>
-		
+			
 		nx.onload = function() {
 
 			//nx.sendsTo("ajax");
@@ -21,6 +21,15 @@
 			nx.printOSC();
 			
 		}
+		
+		testThis = function(){
+			var osc_message = "maxmessage:Party/Central";
+			//console.log(osc_message);
+			// window.location.href = osc_message;
+			nx.colorize("#A8d");
+		}
+		
+		max.bindInlet("testIt", testThis());
 		
 	</script>
 	
