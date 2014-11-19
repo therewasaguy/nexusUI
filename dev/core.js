@@ -255,6 +255,8 @@ var nx = function() {
 				// sender, receiver, parameter, data //
 			this.localTransmit(data);
 			this.response(data);
+		}	else if (this.transmissionProtocol == "max") {
+			this.maxTransmit(this.transmitCommand, this.oscName, this.uiIndex, data);
 		}
 		
 	}
@@ -331,7 +333,37 @@ var nx = function() {
 		
 	}
 	
-	
+	this.maxTransmit = function (command, osc_name, id, data) {
+		console.log(data)
+		if ((typeof data == "object") && (data !== null)) {
+			for (var key in data) {
+				if ((typeof data[key] == "object") && (data[key] !== null)) {
+					for (var key2 in data[key]) {
+						//var osc_message = "maxmessage:" + this.oscName+"/"+key+"/"+key2 + "=" + data[key][key2];
+						var osc_message = "maxmessage:" + this.oscName+"/" + data[key][key2];
+						window.location.href = osc_message;
+					}
+				} else {
+
+
+
+					if (key=="value") {
+						var osc_message = "maxmessage:" + this.oscName+"/" + data[key];
+						window.location.href = osc_message;
+					} else {
+						// var osc_message = "maxmessage:" + this.oscName+"/"+key + "=" + data[key];
+						var osc_message = "maxmessage:" + this.oscName+"/" + data[key];
+						window.location.href = osc_message;
+					}
+
+					
+				}
+			}
+		} else if (typeof data == "number" || typeof data == "string") {
+			var osc_message = "maxmessage:" + this.oscName+"/" + data;
+			window.location.href = osc_message;
+		}
+	}
 	
 	//event listeners
 	this.getHandlers = function(self) {
@@ -887,6 +919,7 @@ function getTemplate(self, target, transmitCommand) {
 	
 	self.ajaxTransmit = nx.ajaxTransmit;
 	self.iosTransmit = nx.iosTransmit;
+	self.maxTransmit = nx.maxTransmit;
 	
 	
 		// By default localTransmit will call the global nx manager globalLocalTransmit function. It can be individually rewritten.
