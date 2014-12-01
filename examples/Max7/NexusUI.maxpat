@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 64.0, 78.0, 1176.0, 901.0 ],
+		"rect" : [ 64.0, 91.0, 1176.0, 901.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -46,7 +46,7 @@
 					"patching_rect" : [ 753.0, 689.0, 391.0, 22.0 ],
 					"presentation_rect" : [ 753.0, 692.0, 0.0, 0.0 ],
 					"style" : "",
-					"text" : "/multislider1/1 0.635"
+					"text" : "/message1/undefined"
 				}
 
 			}
@@ -105,7 +105,7 @@
 , 			{
 				"box" : 				{
 					"data" : 					{
-						"chow" : "because",
+						"text" : "Press Me",
 						"test" : "why not"
 					}
 ,
@@ -114,7 +114,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 4,
 					"outlettype" : [ "dictionary", "", "", "" ],
-					"patching_rect" : [ 18.0, 382.0, 75.0, 22.0 ],
+					"patching_rect" : [ 11.0, 414.0, 75.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"embed" : 1,
 						"parameter_enable" : 0
@@ -248,14 +248,13 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-15",
-					"linecount" : 2,
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 431.0, 704.0, 296.0, 35.0 ],
+					"patching_rect" : [ 431.0, 704.0, 296.0, 22.0 ],
 					"style" : "",
-					"text" : "/multislider1 0.155 0.285 0.14 0.14 0.44 0.62 0.62 0.615 0.555 0.815 0.47 0.13 0.395 0.3 0.295"
+					"text" : "/message1/undefined"
 				}
 
 			}
@@ -288,12 +287,12 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-9",
-					"linecount" : 3,
+					"linecount" : 2,
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 859.0, 85.0, 235.0, 49.0 ],
+					"patching_rect" : [ 780.0, 78.5, 337.0, 35.0 ],
 					"style" : "",
 					"text" : "\"Macintosh HD:/Users/allison/Sites/nexusUI/Max7/Interface.html\""
 				}
@@ -332,7 +331,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 808.0, 26.0, 141.0, 52.0 ]
+					"patching_rect" : [ 731.0, 18.0, 141.0, 52.0 ]
 				}
 
 			}

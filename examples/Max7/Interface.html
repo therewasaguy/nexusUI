@@ -8,21 +8,39 @@
 			// Example to show Integration with Max7
 			
 		nx.onload = function() {
-
-			//nx.sendsTo("ajax");
-			//nx.setAjaxPath("../nexusOSCrelay.php");
 			
 			nx.sendsTo("max");
-			
 			
 			nx.colorize("#08d");
 			
 			multislider2.setNumberOfSliders(8);
+			message1.sendsTo("js");	// to use the message click to set the dict manually.
 
 			nx.printOSC();
 			
 			var dictName = 'testDict';
-			var dictText = document.getElementById('dict');
+			var pageDict;
+			// var dictText = document.getElementById('dict');
+		
+							// Get the latest text from the dictionary to set the message text.
+			window.max.getDict(dictName, function(dict) {
+				//message1.val = JSON.stringify(dict, undefined, 2);  // Use to get a string of the entire dictionary
+				message1.val.message = dict.text;
+				message1.draw();
+			});
+				
+							// Update the message text to the text from the dictionary if you'd like...
+			window.max.bindInlet("updateMessage",function() {
+				window.max.getDict(dictName, function(dict) {
+					message1.val.message = dict.text;
+					message1.draw();
+				});
+			});
+			
+						// Setting the jointsDict when message is pressed...
+			message1.response = function(data) {
+				window.max.setDict("jointsDict", joints1.val);
+			};
 			
 		}
 					// Used to use a URL message to send things out, now use window.max.outlet()
@@ -43,7 +61,8 @@
 	
 	<canvas nx="multislider">Button</canvas>
 	<canvas nx="multislider">Button</canvas>
-	
+	<canvas nx="message"></canvas>
+	<canvas nx="joints"></canvas>
 
 </body>
 </html>
