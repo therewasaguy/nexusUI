@@ -5222,28 +5222,32 @@ var nx = function() {
 				if ((typeof data[key] == "object") && (data[key] !== null)) {
 					for (var key2 in data[key]) {
 						//var osc_message = "maxmessage:" + this.oscName+"/"+key+"/"+key2 + "=" + data[key][key2];
-						var osc_message = "maxmessage:" + this.oscName+"/" + data[key][key2];
-						window.location.href = osc_message;
+						// var osc_message = "maxmessage:" + this.oscName+"/" + data[key][key2];
+						// window.location.href = osc_message;
+						window.max.outlet(this.oscName+" " + data[key][key2]);
 					}
 				} else {
 
 
 
-					if (key=="value") {
-						var osc_message = "maxmessage:" + this.oscName+"/" + data[key];
-						window.location.href = osc_message;
+					if (key=="value" || key=="list") {
+						//var osc_message = "maxmessage:" + this.oscName+"/" + data[key];
+						//window.location.href = osc_message;
+						window.max.outlet(this.oscName+" " + data[key]);
 					} else {
 						// var osc_message = "maxmessage:" + this.oscName+"/"+key + "=" + data[key];
-						var osc_message = "maxmessage:" + this.oscName+"/" + data[key];
-						window.location.href = osc_message;
+						//var osc_message = "maxmessage:" + this.oscName+"/" + data[key];
+						//window.location.href = osc_message;
+						window.max.outlet(this.oscName+"/"+ key +" " + data[key]);
 					}
 
 					
 				}
 			}
 		} else if (typeof data == "number" || typeof data == "string") {
-			var osc_message = "maxmessage:" + this.oscName+"/" + data;
-			window.location.href = osc_message;
+			//var osc_message = "maxmessage:" + this.oscName+"/" + data;
+			//window.location.href = osc_message;
+			window.max.outlet(this.oscName+"/" + data[key]);
 		}
 	}
 	

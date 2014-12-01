@@ -1,10 +1,11 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Multislider</title>
+		<title>Max7 and NexusUI</title>
 		<script type="text/javascript" src="../jquery.js"></script>
 		<script type="text/javascript" src="../../nexusUI.js"></script>
 		<script>
+			// Example to show Integration with Max7
 			
 		nx.onload = function() {
 
@@ -20,16 +21,20 @@
 
 			nx.printOSC();
 			
+			var dictName = 'testDict';
+			var dictText = document.getElementById('dict');
+			
 		}
-		
-		testThis = function(){
-			var osc_message = "maxmessage:Party/Central";
+					// Used to use a URL message to send things out, now use window.max.outlet()
+			//var osc_message = "maxmessage:Party/Central";
 			//console.log(osc_message);
 			// window.location.href = osc_message;
-			nx.colorize("#A8d");
-		}
 		
-		max.bindInlet("testIt", testThis());
+		window.max.bindInlet("testIt", function(){
+			window.max.outlet("Hi");
+		});
+		
+		
 		
 	</script>
 	
