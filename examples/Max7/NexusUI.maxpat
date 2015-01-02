@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 64.0, 91.0, 1176.0, 901.0 ],
+		"rect" : [ 58.0, 87.0, 1182.0, 901.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -75,7 +75,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 18.0, 104.0, 96.0, 22.0 ],
-					"presentation_rect" : [ 339.0, 82.0, 0.0, 0.0 ],
 					"style" : "",
 					"text" : "updateMessage"
 				}
@@ -89,9 +88,8 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 753.0, 689.0, 391.0, 22.0 ],
-					"presentation_rect" : [ 753.0, 692.0, 0.0, 0.0 ],
 					"style" : "",
-					"text" : "/joints1/node4 0.235238"
+					"text" : "/joints1/node6 0.021429"
 				}
 
 			}
@@ -150,7 +148,7 @@
 , 			{
 				"box" : 				{
 					"data" : 					{
-						"text" : "Press Me Now!",
+						"text" : "How about Now!",
 						"test" : "why not"
 					}
 ,
@@ -266,14 +264,13 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-15",
-					"linecount" : 2,
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 431.0, 704.0, 296.0, 35.0 ],
+					"patching_rect" : [ 431.0, 704.0, 296.0, 22.0 ],
 					"style" : "",
-					"text" : "/multislider1 0.7 0.7 0.7 0.7 0.685 0.7 0.745 0.765 0.7 0.7 0.7 0.7 0.7 0.7 0.7"
+					"text" : "/joints1/node6 0.021429"
 				}
 
 			}
@@ -306,14 +303,13 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-9",
-					"linecount" : 2,
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 780.0, 78.5, 337.0, 35.0 ],
+					"patching_rect" : [ 780.0, 78.5, 337.0, 22.0 ],
 					"style" : "",
-					"text" : "\"Macintosh HD:/Users/allison/Sites/nexusUI/Max7/Interface.html\""
+					"text" : "\"Macintosh HD://\""
 				}
 
 			}
@@ -391,7 +387,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 123.5, 136.0, 856.0, 494.0 ],
+					"patching_rect" : [ 134.0, 140.0, 856.0, 494.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 132.0, 118.0, 730.0, 463.0 ],
 					"rendermode" : 0,
