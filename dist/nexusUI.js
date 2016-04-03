@@ -2410,18 +2410,20 @@ envmulti.prototype.scaleNode = function(nodeIndex) {
 
 envmulti.prototype.click = function() {
 	// TO DO: handle multiple clicks
-
+	var zoomFactor = typeof window.olos == 'undefined' ? 1 : 1/ olos._zoom;
 	// find nearest node and set selectedNode (index)
-	selectedNode = findNearestNode(this.clickPos.x/this.actualWid, this.clickPos.y/this.actualHgt, this.val.points);
+	selectedNode = findNearestNode(this.clickPos.x * zoomFactor /this.actualWid, this.clickPos.y * zoomFactor/this.actualHgt, this.val.points);
 
 	this.transmit(this.val);
 	this.draw();
 }
 
 envmulti.prototype.move = function() {
+	var zoomFactor = typeof window.olos == 'undefined' ? 1 : 1/ olos._zoom;
+
 	if (this.clicked) {
-		this.val.points[selectedNode].x = this.clickPos.x;
-		this.val.points[selectedNode].y = this.clickPos.y;
+		this.val.points[selectedNode].x = this.clickPos.x * zoomFactor;
+		this.val.points[selectedNode].y = this.clickPos.y * zoomFactor;
 		this.scaleNode(selectedNode);
 		this.transmit(this.val);
 		this.draw();
@@ -2488,11 +2490,10 @@ function findNearestNode(x, y, nodes) {
 	var nearestIndex = null;
 	var nearestDist = 1000;
 	y = 1 - y;
-	console.log(nodes);
+
 	for (var i = 0; i<nodes.length; i++) {
 		var distance = Math.sqrt(  Math.pow( (nodes[i].x - x), 2), Math.pow((nodes[i].y - (-y)), 2) );
 
-		console.log(i, distance);
 		if (distance < nearestDist) {
 			nearestDist = distance;
 			nearestIndex = i;
